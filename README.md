@@ -245,3 +245,9 @@
 **外部API通信時のエラーハンドリングとタイムアウト処理** 
 
 理由： OpenAI APIやGoogle Maps APIなど、複数の外部APIを同時に叩く構成になるため、API側のサーバーダウンや応答遅延が発生するリスクがあります。その際、Railsの画面が固まったりアプリがクラッシュしないよう、適切なエラーハンドリングや非同期処理をどう組み込むか、知識が不足しているため学習が必要です。A
+
+---
+
+## 画面遷移図
+
+https://www.figma.com/design/z8qGjAImVqXHXHp1CQjb6z/%E6%9C%AA%E7%9F%A5%E3%81%97%E3%82%8B%E3%81%B9?node-id=0-1&p=f&t=59pGQsOmNhtGMREJ-0
