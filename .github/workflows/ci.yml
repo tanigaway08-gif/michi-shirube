@@ -51,7 +51,7 @@ jobs:
       - name: Lint code for consistent style
         run: bin/rubocop -f github
 
-  test:
+test:
     runs-on: ubuntu-latest
 
     services:
@@ -75,6 +75,9 @@ jobs:
       DATABASE_PASSWORD: password
 
     steps:
+      - name: Install packages
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -85,7 +88,7 @@ jobs:
           bundler-cache: true
 
       - name: Prepare database
-        run: bin/rails db:create db:test:prepare
+        run: bin/rails db:test:prepare
 
       - name: Run tests
         run: bin/rails test
