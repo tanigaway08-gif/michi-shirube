@@ -1,0 +1,19 @@
+FROM ruby:3.3.6
+
+ENV LANG C.UTF-8
+ENV TZ Asia/Tokyo
+
+# PostgreSQLクライアントやビルドに必要なパッケージ、Node.js・Yarnのインストール
+RUN apt-get update -qq && \
+    apt-get install -y build-essential libpq-dev nodejs npm vim && \
+    npm install -g yarn
+
+# コンテナ内の作業ディレクトリを /app に設定
+WORKDIR /app
+
+# GemfileとGemfile.lockをコンテナ内にコピーしてbundle installを実行
+COPY Gemfile /app/Gemfile
+COPY Gemfile.lock /app/Gemfile.lock
+RUN bundle install
+
+COPY . /app
