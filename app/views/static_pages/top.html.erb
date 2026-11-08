@@ -1,0 +1,217 @@
+<div class="min-h-screen bg-[#FCEFE3] pb-10 font-sans text-[#4A3A2A] relative overflow-x-hidden">
+  
+  <!-- 1. 上部の濃いオレンジ背景（斜めカット） -->
+  <div class="absolute top-0 left-0 w-full h-[310px] bg-gradient-to-b from-[#E58A53] to-[#EA9662] z-0" style="clip-path: polygon(0 0, 100% 0, 100% 78%, 0 92%);"></div>
+
+  <div class="max-w-[420px] mx-auto px-4 pt-5 relative z-10">
+
+    <!-- ヘッダータイトル（濃いオレンジ部分） -->
+    <header class="relative text-center pt-1 pb-6 text-white">
+      <!-- 左上：メニューアイコン -->
+      <button type="button" class="absolute left-1 top-2 text-white/90 hover:text-white p-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+
+      <!-- 中央：飛行機＆アーチ文字 -->
+      <div class="flex flex-col items-center">
+        <svg class="w-4 h-4 mb-0.5 opacity-95 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2c-4.42 0-8 .5-8 4v9.5C4 17.43 5.57 19 7.5 19L6 20.5v.5h2.23l2-2H14l2 2h2.23v-.5L16.5 19c1.93 0 3.5-1.57 3.5-3.5V6c0-3.5-3.58-4-8-4zM7.5 17c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm3.5-7H6V6h5v4zm4 0h-5V6h5v4zm2.5 7c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+        </svg>
+        <svg viewBox="0 0 180 26" class="w-40 h-6 overflow-visible -mb-1">
+          <path id="headerTextCurve" d="M 15,24 Q 90,2 165,24" fill="transparent" />
+          <text class="text-[10.5px] fill-white/85 font-semibold tracking-[0.22em]">
+            <textPath href="#headerTextCurve" startOffset="50%" text-anchor="middle">MICHISHIRUBE</textPath>
+          </text>
+        </svg>
+        <h1 class="text-[34px] tracking-widest drop-shadow-sm leading-tight" style="font-family: 'Kaisei Decol', serif; font-weight: 700;">未知しるべ</h1>
+        <p class="text-white/85 text-xs tracking-[0.35em] mt-1 font-medium">みちしるべ</p>
+      </div>
+
+<!-- 右側：ARRIVALスタンプ -->
+      <%# 変更点: top-5 に変更し、scale-[0.8]（80%のサイズに縮小）と origin-top-right（右角を基準に縮小）を追加 %>
+      <div class="absolute right-0 top-5 transform -rotate-6 scale-[0.8] origin-top-right border-[1.5px] border-white/75 rounded-lg p-[2px] text-white/90 shadow-sm bg-[#E58A53]/30 backdrop-blur-[1px]">
+        <div class="border border-white/60 rounded-[5px] px-2 py-1 text-[8px] leading-tight font-bold tracking-wider text-center">
+          <div class="border-b border-white/50 pb-0.5 mb-0.5 text-[7px]">ARRIVAL</div>
+          <div class="text-[9.5px] font-extrabold whitespace-nowrap"><%= Time.current.strftime("%d %b %Y").upcase %></div>
+          <div class="border-t border-white/50 pt-0.5 mt-0.5 text-[7px] flex justify-center items-center gap-0.5">
+            <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2c-4.42 0-8 .5-8 4v9.5C4 17.43 5.57 19 7.5 19L6 20.5v.5h2.23l2-2H14l2 2h2.23v-.5L16.5 19c1.93 0 3.5-1.57 3.5-3.5V6c0-3.5-3.58-4-8-4zM7.5 17c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm3.5-7H6V6h5v4zm4 0h-5V6h5v4zm2.5 7c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+            </svg>
+            <span>WELCOME</span>
+          </div>
+        </div>
+      </div>
+      
+    </header>
+
+    <!-- 乗車券メインカード（現在のスタイルを維持） -->
+    <section class="bg-[#FFFDFB] rounded-[20px] mb-5 relative overflow-hidden shadow-[0_4px_12px_rgba(159,72,19,0.08)]">
+      <div class="pt-5 px-6 pb-2">
+        <div class="flex justify-between text-[#C87A45] text-sm font-bold mb-2">
+          <span>乗車券</span>
+          <span>いぬ 1匹</span>
+        </div>
+
+        <%# --- ランダム表示用の都道府県データ --- %>
+        <% prefectures = [
+          { file: "osaka.png",    name: "大阪府" },
+          { file: "okinawa.png",  name: "沖縄県" }
+        ] %>
+        <% current_pref = prefectures.sample %>
+
+        <%# --- ご当地背景 ＋ しるべ駅長を重ねるエリア --- %>
+        <div class="relative my-1 rounded-2xl overflow-hidden bg-[#F9DEC9] border border-[#F0C9AC]">
+          <%= image_tag "prefectures/#{current_pref[:file]}",
+              alt: current_pref[:name],
+              class: "w-full h-auto block opacity-90" %>
+
+          <span class="absolute top-2.5 right-2.5 z-20 bg-[#FFFDFB]/90 backdrop-blur-sm text-[#9F4813] text-xs font-extrabold px-2.5 py-1 rounded-full shadow-sm border border-[#F0C9AC]">
+            📍 <%= current_pref[:name] %>
+          </span>
+
+          <%= image_tag "station_master.png",
+              alt: "しるべ駅長",
+              style: "bottom: -60px; width: 220px;",
+              class: "absolute left-1/2 -translate-x-1/2 z-10 h-auto object-contain drop-shadow-[0_4px_6px_rgba(0,0,0,0.25)]" %>
+        </div>
+      </div>
+
+      <!-- チケットの切り取り線と左右の半円ノッチ -->
+      <div class="relative flex items-center h-7 my-1">
+        <div class="absolute -left-3 w-6 h-6 bg-[#FCEFE3] rounded-full"></div>
+        <div class="w-full border-t-[2.5px] border-dashed border-[#F0C9AC]"></div>
+        <div class="absolute -right-3 w-6 h-6 bg-[#FCEFE3] rounded-full"></div>
+      </div>
+
+      <div class="flex justify-between items-center pt-1.5 px-7 pb-5 text-[#C87A45] font-bold text-base">
+        <span>みち</span>
+        <span class="text-sm opacity-80">→</span>
+        <span>しるべ</span>
+      </div>
+    </section>
+
+    <!-- 2. アクションボタン（新デザイン） -->
+    <section class="flex flex-col gap-3.5 mb-6">
+      <!-- はじめるボタン -->
+      <%= link_to "#", class: "relative flex justify-center items-center h-[56px] rounded-full bg-gradient-to-b from-[#EEA065] to-[#DF7D3E] text-white text-[17px] font-extrabold shadow-[0_4px_10px_rgba(215,115,55,0.35)] hover:opacity-95 active:translate-y-0.5 transition-all" do %>
+        <span class="tracking-wider">はじめる</span>
+        <svg class="w-5 h-5 absolute right-6 text-white/95" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+        </svg>
+      <% end %>
+
+      <!-- 最新のしおりを見るボタン -->
+      <%= link_to "最新のしおりを見る", "#", class: "flex justify-center items-center h-[54px] rounded-full bg-[#FFFDFB] text-[#5A3E2B] text-[16px] font-extrabold border-[1.5px] border-[#E5B089] shadow-[0_2px_6px_rgba(159,72,19,0.06)] hover:bg-[#FFF9F4] active:translate-y-0.5 transition-all tracking-wide" %>
+    </section>
+
+    <!-- 3. 機能紹介セクション：「行き先も予定も、おまかせ。」（新デザイン） -->
+    <section class="bg-[#FFF9F3] rounded-[24px] p-5 mb-5 border-[1.5px] border-[#F0D6C0] shadow-[0_4px_14px_rgba(159,72,19,0.06)] relative overflow-hidden">
+      <!-- 見出し（カバンアイコン付き） -->
+      <div class="flex items-center gap-2 mb-2">
+        <span class="inline-flex items-center justify-center text-[#E38545]">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9 4a2 2 0 0 0-2 2v1H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2V6a2 2 0 0 0-2-2H9zm0 2h6v1H9V6zm-1 5a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm8 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+          </svg>
+        </span>
+        <h2 class="text-[#C86528] text-[18px] font-extrabold tracking-wide">行き先も予定も、おまかせ。</h2>
+      </div>
+
+      <p class="text-[13px] text-[#5C4738] leading-relaxed mb-4 pl-1">
+        行きたい気分を選ぶだけで、旅程を3つ提案。気に入ったプランは、そのままかわいいしおりになります。
+      </p>
+
+      <!-- 2カラムモック（旅程プラン3つ ＆ 1日のしおり） -->
+      <div class="grid grid-cols-[1fr_1.15fr] gap-3 relative">
+        
+        <!-- 左側：旅程プラン3つ -->
+        <div class="border-[1.5px] border-[#F0D6C0] rounded-[18px] p-3 bg-[#FFFDFB] shadow-sm">
+          <h3 class="text-[12px] font-extrabold mb-2.5 text-[#3D2B1F]">旅程プラン3つ</h3>
+
+          <div class="space-y-2">
+            <!-- プランA -->
+            <div class="flex items-center gap-2 border-[1.5px] border-[#E89B65] rounded-full py-1.5 px-2.5 bg-white">
+              <span class="bg-[#E88B44] text-white text-[10px] font-extrabold w-5 h-5 rounded-full inline-flex justify-center items-center shrink-0">A</span>
+              <span class="text-[11px] font-extrabold text-[#3D2B1F] leading-tight">のんびり温泉</span>
+            </div>
+
+            <!-- プランB -->
+            <div class="flex items-center gap-2 border-[1.5px] border-[#E89B65] rounded-full py-1.5 px-2.5 bg-white">
+              <span class="bg-[#E88B44] text-white text-[10px] font-extrabold w-5 h-5 rounded-full inline-flex justify-center items-center shrink-0">B</span>
+              <span class="text-[11px] font-extrabold text-[#3D2B1F] leading-tight">グルメ巡り</span>
+            </div>
+
+            <!-- プランC -->
+            <div class="flex items-center gap-2 border-[1.5px] border-[#E89B65] rounded-full py-1.5 px-2.5 bg-white">
+              <span class="bg-[#E88B44] text-white text-[10px] font-extrabold w-5 h-5 rounded-full inline-flex justify-center items-center shrink-0">C</span>
+              <span class="text-[11px] font-extrabold text-[#3D2B1F] leading-tight">絶景ドライブ</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右側：1日のしおり（＋右端にポラロイド風サムネイル2枚） -->
+        <div class="border-[1.5px] border-[#F0D6C0] rounded-[18px] p-3 bg-[#FFFDFB] shadow-sm relative pr-10">
+          <h3 class="text-[12px] font-extrabold mb-3 text-[#3D2B1F]">1日のしおり</h3>
+          <ul class="space-y-2.5">
+            <li class="grid grid-cols-[34px_8px_1fr] items-center text-[11px]">
+              <span class="text-[#B86B35] font-bold text-[10.5px]">9:00</span>
+              <span class="h-3.5 border-l-[2.5px] border-dotted border-[#E89B65] mx-auto"></span>
+              <span class="font-bold text-[#3D2B1F] whitespace-nowrap">駅で集合</span>
+            </li>
+            <li class="grid grid-cols-[34px_8px_1fr] items-center text-[11px]">
+              <span class="text-[#B86B35] font-bold text-[10.5px]">11:00</span>
+              <span class="h-3.5 border-l-[2.5px] border-dotted border-[#E89B65] mx-auto"></span>
+              <span class="font-bold text-[#3D2B1F] whitespace-nowrap">城下町さんぽ</span>
+            </li>
+            <li class="grid grid-cols-[34px_8px_1fr] items-center text-[11px]">
+              <span class="text-[#B86B35] font-bold text-[10.5px]">13:00</span>
+              <span class="h-3.5 border-l-[2.5px] border-dotted border-[#E89B65] mx-auto"></span>
+              <span class="font-bold text-[#3D2B1F] whitespace-nowrap">ランチ</span>
+            </li>
+            <li class="grid grid-cols-[34px_8px_1fr] items-center text-[11px]">
+              <span class="text-[#B86B35] font-bold text-[10.5px]">15:30</span>
+              <span class="h-3.5 border-l-[2.5px] border-dotted border-[#E89B65] mx-auto"></span>
+              <span class="font-bold text-[#3D2B1F] whitespace-nowrap">温泉宿へ</span>
+            </li>
+          </ul>
+
+          <!-- 右端に重なるポラロイド風ミニカード2枚 -->
+          <div class="absolute -right-3 top-2 w-12 h-11 bg-white p-1 rounded-md shadow-md border border-[#E5D5C5] transform rotate-6">
+            <div class="w-full h-full rounded-sm overflow-hidden flex flex-col">
+              <div class="h-1/2 bg-[#B8E2F2]"></div>
+              <div class="h-1/4 bg-[#E69A68]"></div>
+              <div class="h-1/4 bg-[#9CC97F]"></div>
+            </div>
+          </div>
+
+          <div class="absolute -right-3 bottom-4 w-12 h-11 bg-white p-1 rounded-md shadow-md border border-[#E5D5C5] transform -rotate-3">
+            <div class="w-full h-full rounded-sm overflow-hidden flex flex-col">
+              <div class="h-1/2 bg-[#C2E7F4]"></div>
+              <div class="h-1/2 bg-[#8EC372]"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ナビゲーター紹介セクション（現在のスタイルを維持） -->
+    <section class="bg-[#FFFDFB] rounded-[20px] p-5 flex items-center gap-3.5 shadow-[0_4px_12px_rgba(159,72,19,0.05)]">
+      <div class="shrink-0">
+        <%= image_tag "station_master.png", alt: "しるべ駅長", class: "w-[85px] h-auto object-contain" %>
+      </div>
+      <div>
+        <h2 class="text-[#9F4813] text-[15.5px] font-extrabold mb-1.5">ナビゲーター：しるべ駅長</h2>
+        <p class="text-xs leading-relaxed mb-2">
+          地図が大好きな、赤いトイプードルの駅長さん。旅の相談役として、道しるべになってくれます。
+        </p>
+        <ul class="list-disc pl-4 text-xs space-y-0.5 font-medium">
+          <li>プラン提案をご案内</li>
+          <li>しおり作りをお手伝い</li>
+        </ul>
+      </div>
+    </section>
+
+  </div>
+</div>
