@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  trip: one
+  start_time: MyString
+  place_name: MyString
+  content: MyText
+  day_number: 1
+
+two:
+  trip: two
+  start_time: MyString
+  place_name: MyString
+  content: MyText
+  day_number: 1
