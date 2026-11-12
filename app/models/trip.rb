@@ -3,10 +3,31 @@ class Trip < ApplicationRecord
 
   before_validation :generate_share_token, on: :create
 
-  # enum定義（Rails 8構文）
-  enum :duration, { day_trip: 0, one_night: 1, two_nights: 2, three_nights_or_more: 3 }
-  enum :transport, { public_transit: 0, car: 1, shinkansen_or_plane: 2 }
-  enum :companion, { solo: 0, couple: 1, family: 2, friends: 3 }
+# enum定義（Rails 8構文）
+
+enum :duration, {
+    morning: 0,              # 午前のみ（MVP）
+    afternoon: 1,            # 午後のみ（MVP）
+    day_trip: 2,             # 日帰り・1日（MVP）
+    one_night: 3,            # 1泊2日（本リリースでUI解放）
+    two_nights: 4,           # 2泊3日（本リリースでUI解放）
+    three_nights_or_more: 5  # 3泊以上（本リリースでUI解放）
+  }, prefix: true
+
+  enum :transport, {
+    public_transit: 0,       # 公共交通機関（電車・バス）
+    car: 1,                  # 車（レンタカー・自家用車）
+    other: 2                 # その他・こだわらない
+  }, prefix: true
+
+  enum :companion, {
+    solo: 0,                 # ひとり旅
+    couple: 1,               # カップル・夫婦
+    family: 2,               # 家族
+    friends: 3,              # 友人
+    other: 4                 # その他・こだわらない
+  }, prefix: true
+
   enum :prefecture, {
     hokkaido: 1, aomori: 2, iwate: 3, miyagi: 4, akita: 5, yamagata: 6, fukushima: 7,
     ibaraki: 8, tochigi: 9, gunma: 10, saitama: 11, chiba: 12, tokyo: 13, kanagawa: 14,
