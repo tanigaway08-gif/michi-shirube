@@ -1,0 +1,241 @@
+<% content_for :back_path, step5_trips_path %>
+
+<%
+  # 保存されたセッション値を日本語ラベルに変換するマップ
+  duration_labels = {
+    "morning"   => { main: "午前のみ", sub: "目安：3〜4時間" },
+    "afternoon" => { main: "午後のみ", sub: "目安：4〜5時間" },
+    "day_trip"  => { main: "日帰り（1日）", sub: "目安：8〜10時間" }
+  }
+
+  budget_labels = {
+    3000  => { main: "〜 3,000円", sub: "気軽にサクッと" },
+    5000  => { main: "〜 5,000円", sub: "定番お出かけ" },
+    10000 => { main: "〜 10,000円", sub: "ちょっと贅沢" },
+    15000 => { main: "10,000円以上", sub: "たっぷり満喫" }
+  }
+
+  transport_labels = {
+    "public_transit" => { main: "電車・バス", sub: "公共交通機関" },
+    "car"            => { main: "車", sub: "マイカー・レンタカー" },
+    "walk"           => { main: "徒歩・自転車", sub: "ご近所散策" }
+  }
+
+  companion_labels = {
+    "solo"    => { main: "ひとり旅", sub: "自由気ままに" },
+    "couple"  => { main: "カップル・夫婦", sub: "ふたりの時間" },
+    "friends" => { main: "友人と", sub: "ワイワイ楽しく" },
+    "family"  => { main: "家族と", sub: "みんなで安心" }
+  }
+
+  duration_info  = duration_labels[@duration]   || { main: "未選択", sub: "" }
+  budget_info    = budget_labels[@budget]       || { main: "未選択", sub: "" }
+  departure_info = @departure.presence          || "未選択"
+  transport_info = transport_labels[@transport] || { main: "未選択", sub: "" }
+  companion_info = companion_labels[@companion] || { main: "未選択", sub: "" }
+%>
+
+<!-- 画面全体を中央寄せにするラッパー -->
+<div class="min-h-screen w-full flex flex-col items-center bg-[#FAF6F0]">
+
+  <!-- スマホ幅コンテナ（旅の手帳風ドットパターン背景） -->
+  <div class="relative w-full max-w-[430px] min-h-screen mx-auto px-5 pb-8 flex flex-col bg-[#FAF6F0] [background-image:radial-gradient(#E5D3B8_1.2px,transparent_1.2px)] [background-size:18px_18px]">
+
+    <!-- 上部の柔らかい光彩グラデーション -->
+    <div class="pointer-events-none absolute inset-x-0 top-14 h-44 bg-gradient-to-b from-[#FCE6C9]/70 to-transparent z-0"></div>
+
+    <!-- 共通ヘッダー（STEP5へ戻る） -->
+    <%= render "shared/header", back_path: step5_trips_path %>
+
+    <!-- 1. 駅長のアナウンスエリア（選択画面と違う横並びバナー風） -->
+    <div class="relative z-10 mt-4 mb-3 flex items-center gap-3 bg-white/90 backdrop-blur-xs border-2 border-[#EED9BE] rounded-2xl p-3 shadow-xs">
+      <div class="w-16 h-16 rounded-full bg-[#FDEBD0] border-2 border-[#E59849] flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
+        <%= image_tag "shirube_confirm.png", alt: "しるべ駅長", class: "w-14 h-14 object-contain translate-y-1" %>
+      </div>
+      <div class="flex-1">
+        <div class="inline-block bg-[#E07A2E] text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full tracking-wider mb-1">
+          FINAL CHECK
+        </div>
+        <p class="text-[14px] font-extrabold text-[#3D2B1F] leading-snug">
+          きっぷの準備ができたよ！<br>
+          <span class="text-[12px] font-bold text-[#7A5C43]">この内容で旅先を探していいかな？🐾</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- 2. メイン：特別乗車券（ボーディングパス）風 確認カード -->
+    <div class="relative z-10 bg-[#FFFDF9] rounded-3xl border-2 border-[#E59849] shadow-[0_8px_20px_rgba(180,120,60,0.12)]">
+
+      <!-- チケット上部：路線ヘッダー（出発地 ➔ 未知の旅先） -->
+      <div class="bg-gradient-to-r from-[#E58A53] to-[#DF7D3E] rounded-t-[22px] px-5 py-3.5 text-white">
+        <div class="flex items-center justify-between text-[11px] font-bold text-white/85 tracking-widest mb-1">
+          <span>MICHI-SHIRUBE EXPRESS</span>
+        </div>
+        <div class="flex items-center justify-between gap-2 mt-1">
+          <div class="flex-1">
+            <span class="block text-[10px] text-white/80 font-bold">出発エリア</span>
+            <span class="text-[16px] font-extrabold tracking-wide"><%= departure_info %></span>
+          </div>
+
+<!-- 電車＆矢印アイコン -->
+          <div class="flex flex-col items-center px-2">
+            <span class="text-[10px] font-bold text-[#FDEBD0] tracking-wider">AIルート検索</span>
+            <div class="flex items-center gap-1.5 text-white mt-0.5">
+              <span class="w-6 h-0.5 bg-white/60 rounded-full"></span>
+              <%= image_tag "icon_root.png", alt: "電車", class: "w-8 h-8 object-contain" %>
+              <span class="w-6 h-0.5 bg-white/60 rounded-full"></span>
+            </div>
+          </div>
+
+          <div class="flex-1 text-right">
+            <span class="block text-[10px] text-white/80 font-bold">目的地</span>
+            <span class="text-[16px] font-extrabold tracking-wide text-[#FFF3D6]">未知の場所へ</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ミシン目と左右の切り欠き（ボーディングパスの区切り線） -->
+      <div class="relative flex items-center justify-between py-2">
+        <!-- 左切り欠き -->
+        <span class="pointer-events-none absolute -left-[15px] top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#FAF6F0] border-2 border-transparent border-r-[#E59849] border-t-[#E59849] border-b-[#E59849] z-10"></span>
+        <span class="pointer-events-none absolute -left-[16px] top-1/2 -translate-y-1/2 w-[14px] h-8 bg-[#FAF6F0] z-20"></span>
+
+        <div class="w-full border-t-2 border-dashed border-[#E6D5B8] mx-4"></div>
+
+        <!-- 右切り欠き -->
+        <span class="pointer-events-none absolute -right-[15px] top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#FAF6F0] border-2 border-transparent border-l-[#E59849] border-t-[#E59849] border-b-[#E59849] z-10"></span>
+        <span class="pointer-events-none absolute -right-[16px] top-1/2 -translate-y-1/2 w-[14px] h-8 bg-[#FAF6F0] z-20"></span>
+      </div>
+
+      <!-- チケット本体：5つの選択内容リスト -->
+      <div class="px-5 pt-1 pb-5 divide-y divide-[#F2E5D5]">
+
+<!-- ① 日程（旅行時間） -->
+        <div class="py-3 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-[#FFF3E0] border border-[#F5D6B3] flex items-center justify-center p-0 shrink-0">
+              <%= image_tag "icon_clock.png", alt: "旅行時間", class: "w-full h-full object-contain" %>
+            </div>
+            <div>
+              <span class="block text-[11px] font-bold text-[#8A6D53]">① 旅行時間</span>
+              <div class="flex items-baseline gap-2">
+                <span class="text-[15px] font-extrabold text-[#3D2B1F]"><%= duration_info[:main] %></span>
+                <span class="text-[11px] font-bold text-[#8A5A2B]"><%= duration_info[:sub] %></span>
+              </div>
+            </div>
+          </div>
+          <%= link_to step1_trips_path(from_confirm: "true"),
+                class: "text-[12px] font-extrabold text-[#D97224] bg-[#FFF4E6] hover:bg-[#FDE6C4] border border-[#F2C99B] px-3 py-1.5 rounded-full transition-colors shrink-0" do %>
+            変更
+          <% end %>
+        </div>
+
+<!-- ② 予算 -->
+        <div class="py-3 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-[#FFF3E0] border border-[#F5D6B3] flex items-center justify-center p-0 shrink-0">
+              <%= image_tag "icon_wallet.png", alt: "予算", class: "w-full h-full object-contain" %>
+            </div>
+            <div>
+              <span class="block text-[11px] font-bold text-[#8A6D53]">② 予算（1人あたり）</span>
+              <div class="flex items-baseline gap-2">
+                <span class="text-[15px] font-extrabold text-[#3D2B1F]"><%= budget_info[:main] %></span>
+                <span class="text-[11px] font-bold text-[#8A5A2B]"><%= budget_info[:sub] %></span>
+              </div>
+            </div>
+          </div>
+          <%= link_to step2_trips_path(from_confirm: "true"),
+                class: "text-[12px] font-extrabold text-[#D97224] bg-[#FFF4E6] hover:bg-[#FDE6C4] border border-[#F2C99B] px-3 py-1.5 rounded-full transition-colors shrink-0" do %>
+            変更
+          <% end %>
+        </div>
+
+<!-- ③ 出発地 -->
+        <div class="py-3 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-[#FFF3E0] border border-[#F5D6B3] flex items-center justify-center p-0 shrink-0">
+              <%= image_tag "icon_pin.png", alt: "出発地", class: "w-full h-full object-contain" %>
+            </div>
+            <div>
+              <span class="block text-[11px] font-bold text-[#8A6D53]">③ 出発地</span>
+              <span class="text-[15px] font-extrabold text-[#3D2B1F]"><%= departure_info %></span>
+            </div>
+          </div>
+          <%= link_to step3_trips_path(from_confirm: "true"),
+                class: "text-[12px] font-extrabold text-[#D97224] bg-[#FFF4E6] hover:bg-[#FDE6C4] border border-[#F2C99B] px-3 py-1.5 rounded-full transition-colors shrink-0" do %>
+            変更
+          <% end %>
+        </div>
+
+<!-- ④ 交通手段 -->
+        <div class="py-3 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-[#FFF3E0] border border-[#F5D6B3] flex items-center justify-center p-0 shrink-0">
+              <%= image_tag "icon_train.png", alt: "交通手段", class: "w-full h-full object-contain" %>
+            </div>
+            <div>
+              <span class="block text-[11px] font-bold text-[#8A6D53]">④ 交通手段</span>
+              <div class="flex items-baseline gap-2">
+                <span class="text-[15px] font-extrabold text-[#3D2B1F]"><%= transport_info[:main] %></span>
+                <span class="text-[11px] font-bold text-[#8A5A2B]"><%= transport_info[:sub] %></span>
+              </div>
+            </div>
+          </div>
+          <%= link_to step4_trips_path(from_confirm: "true"),
+                class: "text-[12px] font-extrabold text-[#D97224] bg-[#FFF4E6] hover:bg-[#FDE6C4] border border-[#F2C99B] px-3 py-1.5 rounded-full transition-colors shrink-0" do %>
+            変更
+          <% end %>
+        </div>
+
+        <!-- ⑤ 同行者 -->
+        <div class="py-3 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-[#FFF3E0] border border-[#F5D6B3] flex items-center justify-center text-lg shrink-0">
+              🐾
+            </div>
+            <div>
+              <span class="block text-[11px] font-bold text-[#8A6D53]">⑤ 同行者</span>
+              <div class="flex items-baseline gap-2">
+                <span class="text-[15px] font-extrabold text-[#3D2B1F]"><%= companion_info[:main] %></span>
+                <span class="text-[11px] font-bold text-[#8A5A2B]"><%= companion_info[:sub] %></span>
+              </div>
+            </div>
+          </div>
+          <%= link_to step5_trips_path(from_confirm: "true"),
+                class: "text-[12px] font-extrabold text-[#D97224] bg-[#FFF4E6] hover:bg-[#FDE6C4] border border-[#F2C99B] px-3 py-1.5 rounded-full transition-colors shrink-0" do %>
+            変更
+          <% end %>
+        </div>
+
+      </div>
+
+      <!-- チケット下部：検札スタンプ風フッター -->
+      <div class="bg-[#FDF6EC] rounded-b-[22px] px-5 py-2.5 border-t border-dashed border-[#E6D5B8] flex items-center justify-between">
+        <span class="text-[11px] font-bold text-[#8A6D53]">検札：しるべ駅長</span>
+        <span class="inline-flex items-center gap-1 text-[11px] font-extrabold text-[#C86D1F] bg-[#FFF8EE] px-2.5 py-0.5 rounded-md -rotate-2">
+          🐾 準備OK
+        </span>
+      </div>
+    </div>
+
+    <!-- 3. アクションボタン（AI提案を実行するメインCTA） -->
+    <div class="relative z-10 mt-6 space-y-3">
+      <%# ※送信先パス（trips_path または propose_trips_path）は実装に合わせて変更してください %>
+      <%= form_with url: trips_path, method: :post, local: true do %>
+        <button type="submit"
+                class="relative w-full flex justify-center items-center h-[58px] rounded-full bg-gradient-to-b from-[#EEA065] to-[#DF7D3E] text-white text-[17px] font-extrabold shadow-[0_5px_14px_rgba(215,115,55,0.4)] hover:opacity-95 active:translate-y-0.5 transition-all cursor-pointer">
+          <span class="tracking-wider">この条件で旅先を3つ探す！</span>
+          <svg class="w-5 h-5 absolute right-6 text-white/95" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+      <% end %>
+
+      <div class="text-center pt-1">
+        <%= link_to "最初からやり直す（トップ画面へ）", root_path,
+              class: "text-[13px] font-bold text-[#7A5C43] underline underline-offset-4 decoration-[#7A5C43]/50 hover:opacity-75 transition-opacity" %>
+      </div>
+    </div>
+
+  </div>
+</div>

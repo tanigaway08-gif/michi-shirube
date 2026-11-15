@@ -71,9 +71,9 @@
             📍 <%= current_pref[:name] %>
           </span>
 
-          <%= image_tag "station_master.png",
+          <%= image_tag "shirube.png",
               alt: "しるべ駅長",
-              style: "bottom: -60px; width: 220px;",
+              style: "bottom: 0px; width: 180px;",
               class: "absolute left-1/2 -translate-x-1/2 z-10 h-auto object-contain drop-shadow-[0_4px_6px_rgba(0,0,0,0.25)]" %>
         </div>
       </div>
@@ -95,7 +95,7 @@
     <!-- 2. アクションボタン（新デザイン） -->
     <section class="flex flex-col gap-3.5 mb-6">
       <!-- はじめるボタン -->
-      <%= link_to "#", class: "relative flex justify-center items-center h-[56px] rounded-full bg-gradient-to-b from-[#EEA065] to-[#DF7D3E] text-white text-[17px] font-extrabold shadow-[0_4px_10px_rgba(215,115,55,0.35)] hover:opacity-95 active:translate-y-0.5 transition-all" do %>
+      <%= link_to new_trip_path, class: "relative flex justify-center items-center h-[56px] rounded-full bg-gradient-to-b from-[#EEA065] to-[#DF7D3E] text-white text-[17px] font-extrabold shadow-[0_4px_10px_rgba(215,115,55,0.35)] hover:opacity-95 active:translate-y-0.5 transition-all" do %>
         <span class="tracking-wider">はじめる</span>
         <svg class="w-5 h-5 absolute right-6 text-white/95" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
@@ -199,7 +199,7 @@
     <!-- ナビゲーター紹介セクション（現在のスタイルを維持） -->
     <section class="bg-[#FFFDFB] rounded-[20px] p-5 flex items-center gap-3.5 shadow-[0_4px_12px_rgba(159,72,19,0.05)]">
       <div class="shrink-0">
-        <%= image_tag "station_master.png", alt: "しるべ駅長", class: "w-[85px] h-auto object-contain" %>
+        <%= image_tag "shirube.png", alt: "しるべ駅長", class: "w-[85px] h-auto object-contain" %>
       </div>
       <div>
         <h2 class="text-[#9F4813] text-[15.5px] font-extrabold mb-1.5">ナビゲーター：しるべ駅長</h2>
