@@ -1,0 +1,191 @@
+<% content_for :back_path, (params[:from_confirm] == "true" ? confirm_trips_path : root_path) %>
+
+<!-- 画面全体を中央寄せにするラッパー -->
+<div class="min-h-screen w-full flex flex-col items-center bg-[#FAF6F0]">
+
+  <!-- スマホ幅コンテナ（最下部エリアまでこの中に収める） -->
+  <div class="w-full max-w-[430px] min-h-screen mx-auto px-5 flex flex-col bg-[#FAF6F0]">
+    
+    <!-- 共通ヘッダー -->
+    <%= render "shared/header", back_path: (params[:from_confirm] == "true" ? confirm_trips_path : root_path) %>
+
+<!-- ステータスバー ＋ キャラクター＆吹き出しエリア（背景画像が切れない構造） -->
+    <div class="relative -mx-5 overflow-hidden">
+      <!-- 背景画像（w-full h-auto でヘッダー直下から見切れずに全体を表示） -->
+      <%= image_tag "shirube_step1.png",
+            alt: "時間を気にするしるべ駅長",
+            class: "w-full h-auto block select-none pointer-events-none" %>
+
+      <!-- 下端の境界を画面背景色(#FAF6F0)に自然に馴染ませるグラデーション -->
+      <div class="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-[#FAF6F0] via-[#FAF6F0]/75 to-transparent z-10 pointer-events-none"></div>
+
+      <!-- 画像の上に重ねる要素（ステータスバー ＋ 右寄せの吹き出し） -->
+      <div class="absolute inset-0 z-20 flex flex-col justify-between pt-3 pb-4 px-5">
+        
+        <!-- 1. ステータスバー（上部に配置） -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="bg-[#F3E2C7]/95 backdrop-blur-sm text-[#8A5A2B] text-[13px] font-extrabold px-3.5 py-1 rounded-full shadow-sm">
+              STEP 1 / 5
+            </span>
+            <span class="bg-white/95 backdrop-blur-sm text-[#3D2B1F] text-[13px] font-bold px-3.5 py-1 rounded-full shadow-sm">
+              旅行時間の選択
+            </span>
+          </div>
+
+          <!-- 5分割プログレスバー -->
+          <div class="grid grid-cols-5 gap-2">
+            <div class="h-2 rounded-full bg-[#E07A2E] shadow-xs"></div>
+            <div class="h-2 rounded-full bg-[#E6D5B8]/85 backdrop-blur-xs"></div>
+            <div class="h-2 rounded-full bg-[#E6D5B8]/85 backdrop-blur-xs"></div>
+            <div class="h-2 rounded-full bg-[#E6D5B8]/85 backdrop-blur-xs"></div>
+            <div class="h-2 rounded-full bg-[#E6D5B8]/85 backdrop-blur-xs"></div>
+          </div>
+        </div>
+
+        <!-- 2. 吹き出し（justify-end で右側に配置） -->
+        <div class="flex justify-end items-center pr-1 mb-24">
+          <div class="relative w-[48%] flex items-center justify-center">
+            <%= image_tag "comment.png", alt: "吹き出し", class: "w-full h-auto object-contain select-none pointer-events-none drop-shadow-sm" %>
+            <p class="absolute inset-0 flex items-center justify-center pb-2 px-4 text-[15px] font-extrabold text-[#3D2B1F] leading-relaxed tracking-wide text-center">
+              どれくらい<br>旅行する？
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <%# フラッシュメッセージ %>
+    <% if flash[:alert].present? %>
+      <div class="mb-2.5 p-3 rounded-xl bg-red-50/95 border border-red-200 text-red-700 text-sm font-medium text-center shadow-sm">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
+
+    <%# --- 3. トラベルチケット風・選択肢ボタン --- %>
+    <%= form_with url: save_step1_trips_path, method: :post, local: true, class: "relative -mt-6 space-y-3 z-20" do %>
+      <% if params[:from_confirm] == "true" %>
+        <%= hidden_field_tag :from_confirm, "true" %>
+      <% end %>
+
+      <%
+        mvp_durations = [
+          {
+            key: "morning",
+            title: "午前のみ",
+            subtitle: "朝活やランチ前までのショートトリップ",
+            time_hint: "目安：3〜4時間"
+          },
+          {
+            key: "afternoon",
+            title: "午後のみ",
+            subtitle: "昼下がりから夕方までのんびりお出かけ",
+            time_hint: "目安：4〜5時間"
+          },
+          {
+            key: "day_trip",
+            title: "日帰り（1日）",
+            subtitle: "朝から夜までたっぷり満喫する1日旅",
+            time_hint: "目安：8〜10時間"
+          }
+        ]
+      %>
+
+<% mvp_durations.each do |item| %>
+        <% is_selected = (request.referer&.include?("/trips/") && @duration == item[:key]) %>
+        <button type="submit"
+                name="duration"
+                value="<%= item[:key] %>"
+                class="group relative w-full text-left bg-[#FFFDF9]/95 hover:bg-[#FFF9EE] active:scale-[0.99] transition-all duration-150 rounded-2xl border-2 <%= is_selected ? 'border-[#E07A1B] shadow-md' : 'border-[#F0DEC6] shadow-sm hover:border-[#E59849]' %> flex items-stretch">
+
+          <%# 左側の半円切り欠き（ボタンの左枠線を跨いで背景色で塗りつぶし、右半分の弧だけ線を描く） %>
+          <span class="pointer-events-none absolute -left-[15px] top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#FAF6F0] border-2 border-transparent <%= is_selected ? 'border-r-[#E07A1B] border-t-[#E07A1B] border-b-[#E07A1B]' : 'border-r-[#F0DEC6] border-t-[#F0DEC6] border-b-[#F0DEC6] group-hover:border-r-[#E59849] group-hover:border-t-[#E59849] group-hover:border-b-[#E59849]' %> z-10 transition-colors duration-150"></span>
+          <%# 左半円の外側にはみ出る上下の枠線を隠すマスク %>
+          <span class="pointer-events-none absolute -left-[16px] top-1/2 -translate-y-1/2 w-[14px] h-8 bg-[#FAF6F0] z-20"></span>
+
+          <%# 右側の半円切り欠き（ボタンの右枠線を跨いで背景色で塗りつぶし、左半分の弧だけ線を描く） %>
+          <span class="pointer-events-none absolute -right-[15px] top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#FAF6F0] border-2 border-transparent <%= is_selected ? 'border-l-[#E07A1B] border-t-[#E07A1B] border-b-[#E07A1B]' : 'border-l-[#F0DEC6] border-t-[#F0DEC6] border-b-[#F0DEC6] group-hover:border-l-[#E59849] group-hover:border-t-[#E59849] group-hover:border-b-[#E59849]' %> z-10 transition-colors duration-150"></span>
+          <%# 右半円の外側にはみ出る上下の枠線を隠すマスク %>
+          <span class="pointer-events-none absolute -right-[16px] top-1/2 -translate-y-1/2 w-[14px] h-8 bg-[#FAF6F0] z-20"></span>
+
+          <%# チケット左半券（メイン情報） %>
+          <div class="flex-1 py-3.5 pl-7 pr-3">
+            <div class="flex items-center gap-2.5 mb-1">
+              <span class="text-lg font-extrabold text-[#3D2B1F] group-hover:text-[#C86D1F] transition-colors">
+                <%= item[:title] %>
+              </span>
+              <span class="text-[11px] font-bold text-[#6E543B] bg-[#FDEBD0] px-2.5 py-0.5 rounded-md">
+                <%= item[:time_hint] %>
+              </span>
+            </div>
+            <p class="text-xs font-medium text-[#5C4738]">
+              <%= item[:subtitle] %>
+            </p>
+          </div>
+
+          <%# ミシン目（破線）＋ チケット右半券（肉球スタンプ枠） %>
+          <div class="w-24 border-l-2 border-dashed <%= is_selected ? 'border-[#E07A1B]' : 'border-[#E6D5B8] group-hover:border-[#E59849]' %> flex items-center justify-center pr-3">
+            <div class="w-11 h-11 rounded-full border border-dashed border-[#D6B892] bg-[#FDEBD0]/70 group-hover:bg-[#FDE6C4] group-hover:rotate-12 flex items-center justify-center transition-all duration-200">
+              <span class="text-lg select-none">🐾</span>
+            </div>
+          </div>
+
+        </button>
+      <% end %>
+
+      <%# ▼ ここに4つ目の「1泊2日（準備中）」を追加 ▼ %>
+      <div class="relative w-full text-left bg-[#F5EFE6]/70 rounded-2xl border-2 border-dashed border-[#DFCBB2] flex items-stretch opacity-75 select-none cursor-not-allowed">
+
+        <%# 左側の半円切り欠き %>
+        <span class="pointer-events-none absolute -left-[15px] top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#FAF6F0] border-2 border-dashed border-transparent border-r-[#DFCBB2] border-t-[#DFCBB2] border-b-[#DFCBB2] z-10"></span>
+        <span class="pointer-events-none absolute -left-[16px] top-1/2 -translate-y-1/2 w-[14px] h-8 bg-[#FAF6F0] z-20"></span>
+
+        <%# 右側の半円切り欠き %>
+        <span class="pointer-events-none absolute -right-[15px] top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#FAF6F0] border-2 border-dashed border-transparent border-l-[#DFCBB2] border-t-[#DFCBB2] border-b-[#DFCBB2] z-10"></span>
+        <span class="pointer-events-none absolute -right-[16px] top-1/2 -translate-y-1/2 w-[14px] h-8 bg-[#FAF6F0] z-20"></span>
+
+        <%# チケット左半券（メイン情報） %>
+        <div class="flex-1 py-3.5 pl-7 pr-3">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-lg font-extrabold text-[#8A7563]">
+              1泊2日
+            </span>
+            <span class="text-[10px] font-extrabold text-[#8A5A2B] bg-[#EED9BE] px-2 py-0.5 rounded-md">
+              🔒 ログイン限定（準備中）
+            </span>
+          </div>
+          <p class="text-xs font-medium text-[#8A7563]">
+            宿に泊まってご当地をじっくり巡る週末旅
+          </p>
+        </div>
+
+        <%# ミシン目（破線）＋ チケット右半券 %>
+        <div class="w-24 border-l-2 border-dashed border-[#DFCBB2] flex items-center justify-center pr-3">
+          <div class="w-11 h-11 rounded-full border border-dashed border-[#CBB59B] bg-[#EDE2D3]/70 flex items-center justify-center text-center leading-tight">
+            <span class="text-[10px] font-extrabold text-[#8A7563]">Coming<br>Soon</span>
+          </div>
+        </div>
+
+      </div>
+    <% end %>
+
+<!-- 4. 最下部エリア（画像が切れないよう縦横比を維持して全体を表示） -->
+    <div class="relative -mx-5 mt-auto overflow-hidden">
+      <!-- 背景画像（w-full h-auto で上部が切れずに全体を表示） -->
+      <%= image_tag "step_bg_bottom.png",
+            alt: "",
+            class: "w-full h-auto block select-none pointer-events-none" %>
+
+      <!-- 上端の境界を画面背景色(#FAF6F0)に馴染ませるグラデーション（高さを抑えて蝶々に被らないように調整） -->
+      <div class="absolute inset-x-0 top-0 h-15 bg-gradient-to-b from-[#FAF6F0] to-transparent z-10 pointer-events-none"></div>
+
+      <!-- トップ画面に戻るリンク（画像の下部中央に重ねて配置） -->
+      <div class="absolute inset-x-0 bottom-5 z-20 text-center">
+        <%= link_to "トップ画面に戻る", root_path,
+              class: "text-[14px] font-bold text-[#5C4433] underline underline-offset-4 decoration-[#5C4433]/60 hover:opacity-75 transition-opacity" %>
+      </div>
+    </div>
+
+  </div>
+</div>
