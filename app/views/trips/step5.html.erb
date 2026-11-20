@@ -10,11 +10,14 @@
     <!-- 共通ヘッダー（STEP4へ戻る / 確認画面から来た場合は確認画面へ戻る） -->
     <%= render "shared/header", back_path: back_url %>
 
-<!-- ステータスバー ＋ キャラクター＆吹き出しエリア（背景画像が切れない構造） -->
+    <!-- ステータスバー ＋ キャラクター＆吹き出しエリア（背景画像が切れない構造） -->
     <div class="relative -mx-5 overflow-hidden">
-      <!-- 背景画像（w-full h-auto でヘッダー直下から見切れずに全体を表示） -->
+      <!-- 背景画像（width/height と fetchpriority で読み込み時のガタつきを防止） -->
       <%= image_tag "shirube_step5.png",
             alt: "同行者を尋ねるしるべ駅長",
+            width: 1477,
+            height: 1065,
+            fetchpriority: "high",
             class: "w-full h-auto block select-none pointer-events-none" %>
 
       <!-- 下端の境界を画面背景色(#FAF6F0)に自然に馴染ませるグラデーション -->
@@ -47,7 +50,11 @@
         <!-- 2. 吹き出し（justify-end で右側に配置） -->
         <div class="flex justify-end items-center pr-1 mb-24">
           <div class="relative w-[48%] flex items-center justify-center">
-            <%= image_tag "comment.png", alt: "吹き出し", class: "w-full h-auto object-contain select-none pointer-events-none drop-shadow-sm" %>
+            <%= image_tag "comment.png",
+                  alt: "吹き出し",
+                  width: 1536,
+                  height: 1024,
+                  class: "w-full h-auto object-contain select-none pointer-events-none drop-shadow-sm" %>
             <p class="absolute inset-0 flex items-center justify-center pb-2 px-4 text-[15px] font-extrabold text-[#3D2B1F] leading-relaxed tracking-wide text-center">
               誰と行く？
             </p>
@@ -56,17 +63,18 @@
 
       </div>
     </div>
-    <%# フラッシュメッセージ %>
-    <% if flash[:alert].present? %>
-      <div class="mb-2.5 p-3 rounded-xl bg-red-50/95 border border-red-200 text-red-700 text-sm font-medium text-center shadow-sm">
-        <%= flash[:alert] %>
-      </div>
-    <% end %>
 
     <%# --- 3. トラベルチケット風・同行者選択肢ボタン --- %>
     <%= form_with url: save_step5_trips_path, method: :post, local: true, class: "relative -mt-6 space-y-3 z-20" do %>
       <% if params[:from_confirm] == "true" %>
         <%= hidden_field_tag :from_confirm, "true" %>
+      <% end %>
+
+      <%# フラッシュメッセージ（ボタンと重ならないよう form 内に配置） %>
+      <% if flash[:alert].present? %>
+        <div class="py-2.5 px-4 rounded-xl bg-red-50/95 border border-red-200 text-red-700 text-xs font-bold text-center shadow-xs">
+          <%= flash[:alert] %>
+        </div>
       <% end %>
 
       <%
@@ -143,6 +151,8 @@
     <div class="relative -mx-5 mt-auto overflow-hidden">
       <%= image_tag "step_bg_bottom.png",
             alt: "",
+            width: 853,
+            height: 308,
             class: "w-full h-auto block select-none pointer-events-none" %>
       <div class="absolute inset-x-0 top-0 h-15 bg-gradient-to-b from-[#FAF6F0] to-transparent z-10 pointer-events-none"></div>
       <div class="absolute inset-x-0 bottom-5 z-20 text-center">

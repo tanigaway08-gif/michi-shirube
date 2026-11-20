@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
+  get "stations/nearest", to: "stations#nearest"
 
   root "static_pages#top"
 
