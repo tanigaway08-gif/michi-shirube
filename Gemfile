@@ -68,7 +68,7 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "json", "< 2.10.0"
+gem "json", "< 3.2.0"
 
 group :development, :test do
   gem "dotenv-rails"
