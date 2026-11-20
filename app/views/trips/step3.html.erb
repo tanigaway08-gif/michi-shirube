@@ -4,17 +4,20 @@
 <!-- 画面全体を中央寄せにするラッパー -->
 <div class="min-h-screen w-full flex flex-col items-center bg-[#FAF6F0]">
 
-  <!-- スマホ幅コンテナ -->
-  <div class="w-full max-w-[430px] min-h-screen mx-auto px-5 flex flex-col bg-[#FAF6F0]">
-    
+  <!-- スマホ幅コンテナ（Stimulusコントローラを接続） -->
+  <div class="w-full max-w-[430px] min-h-screen mx-auto px-5 flex flex-col bg-[#FAF6F0]"
+       data-controller="geolocation">
+
     <!-- 共通ヘッダー（STEP2へ戻る / 確認画面から来た場合は確認画面へ戻る） -->
     <%= render "shared/header", back_path: back_url %>
 
-<!-- ステータスバー ＋ キャラクター＆吹き出しエリア（背景画像が切れない構造） -->
+    <!-- ステータスバー ＋ キャラクター＆吹き出しエリア（背景画像が切れない構造） -->
     <div class="relative -mx-5 overflow-hidden">
-      <!-- 背景画像（w-full h-auto でヘッダー直下から見切れずに全体を表示） -->
       <%= image_tag "shirube_step3.png",
             alt: "出発地を尋ねるしるべ駅長",
+            width: 1477,
+            height: 1065,
+            fetchpriority: "high",
             class: "w-full h-auto block select-none pointer-events-none" %>
 
       <!-- 下端の境界を画面背景色(#FAF6F0)に自然に馴染ませるグラデーション -->
@@ -22,7 +25,7 @@
 
       <!-- 画像の上に重ねる要素（ステータスバー ＋ 右寄せの吹き出し） -->
       <div class="absolute inset-0 z-20 flex flex-col justify-between pt-3 pb-4 px-5">
-        
+
         <!-- 1. ステータスバー（上部に配置） -->
         <div>
           <div class="flex items-center justify-between mb-2">
@@ -47,7 +50,11 @@
         <!-- 2. 吹き出し（justify-end で右側に配置） -->
         <div class="flex justify-end items-center pr-1 mb-24">
           <div class="relative w-[48%] flex items-center justify-center">
-            <%= image_tag "comment.png", alt: "吹き出し", class: "w-full h-auto object-contain select-none pointer-events-none drop-shadow-sm" %>
+            <%= image_tag "comment.png",
+                  alt: "吹き出し",
+                  width: 1536,
+                  height: 1024,
+                  class: "w-full h-auto object-contain select-none pointer-events-none drop-shadow-sm" %>
             <p class="absolute inset-0 flex items-center justify-center pb-2 px-4 text-[15px] font-extrabold text-[#3D2B1F] leading-relaxed tracking-wide text-center">
               どこから<br>出発する？
             </p>
@@ -57,94 +64,85 @@
       </div>
     </div>
 
-    <%# フラッシュメッセージ %>
-    <% if flash[:alert].present? %>
-      <div class="mb-2.5 p-3 rounded-xl bg-red-50/95 border border-red-200 text-red-700 text-sm font-medium text-center shadow-sm">
-        <%= flash[:alert] %>
-      </div>
-    <% end %>
+    <%# --- 3. 出発地の選択エリア（フラッシュメッセージ ＋ 現在地取得 ＋ 手入力 ＋ 全国主要駅チップ） --- %>
+    <div class="relative -mt-6 z-20 space-y-4">
 
-    <%# --- 3. トラベルチケット風・出発地選択肢ボタン --- %>
-    <%= form_with url: save_step3_trips_path, method: :post, local: true, class: "relative -mt-6 space-y-3 z-20" do %>
-      <% if params[:from_confirm] == "true" %>
-        <%= hidden_field_tag :from_confirm, "true" %>
+      <%# フラッシュメッセージ %>
+      <% if flash[:alert].present? %>
+        <div class="py-2.5 px-4 rounded-xl bg-red-50/95 border border-red-200 text-red-700 text-xs font-bold text-center shadow-xs">
+          <%= flash[:alert] %>
+        </div>
       <% end %>
 
-      <%
-        # ※README・コントローラーの定義に合わせて key / value を調整してください
-        departure_options = [
-          {
-            value: "東京駅周辺",
-            title: "東京・関東エリア",
-            badge: "首都圏から",
-            subtitle: "東京・神奈川・千葉・埼玉など関東近郊から出発"
-          },
-          {
-            value: "大阪駅周辺",
-            title: "大阪・関西エリア",
-            badge: "関西圏から",
-            subtitle: "大阪・京都・兵庫・奈良など関西近郊から出発"
-          },
-          {
-            value: "名古屋駅周辺",
-            title: "名古屋・東海エリア",
-            badge: "東海圏から",
-            subtitle: "愛知・岐阜・三重・静岡など東海近郊から出発"
-          },
-          {
-            value: "博多駅周辺",
-            title: "福岡・九州エリア",
-            badge: "九州圏から",
-            subtitle: "福岡を中心に九州各地の主要エリアから出発"
-          }
-        ]
-      %>
+      <%# ① 現在地から最寄駅を探すボタン %>
+      <div>
+        <button type="button"
+                data-geolocation-target="button"
+                data-action="click->geolocation#findNearestStations"
+                class="w-full py-3.5 px-4 rounded-full bg-white hover:bg-[#FFF9EE] active:scale-[0.99] border-2 border-[#E6D5B8] hover:border-[#E07A2E] text-[#3D2B1F] font-extrabold text-[15px] flex items-center justify-center gap-2 shadow-sm transition-all disabled:opacity-50">
+          <span class="text-lg leading-none">📍</span>
+          <span>いまいる場所から探す</span>
+        </button>
 
-      <% departure_options.each do |item| %>
-        <% is_selected = (@departure == item[:value]) %>
+        <%# 取得中・結果メッセージ表示枠 %>
+        <p data-geolocation-target="status" class="hidden text-xs font-bold text-center mt-2.5"></p>
+
+        <%# 取得された最寄駅候補ボタンがここに展開される %>
+        <div data-geolocation-target="results" class="mt-2.5 space-y-2"></div>
+      </div>
+
+      <%# 区切り線「または入力」 %>
+      <div class="flex items-center gap-3 px-2">
+        <div class="flex-1 h-px bg-[#E0D2BE]"></div>
+        <span class="text-xs font-bold text-[#8A7360]">または入力</span>
+        <div class="flex-1 h-px bg-[#E0D2BE]"></div>
+      </div>
+
+      <%# ② 手入力フォーム ＋ 全国主要駅チップ ＋ つぎへボタン %>
+      <%= form_with url: save_step3_trips_path, method: :post, local: true, class: "space-y-4" do %>
+        <% if params[:from_confirm] == "true" %>
+          <%= hidden_field_tag :from_confirm, "true" %>
+        <% end %>
+
+        <%# テキスト入力欄 %>
+        <div>
+          <%= text_field_tag :departure,
+                @departure,
+                id: "departure_input",
+                placeholder: "例：東京駅・大阪駅",
+                autocomplete: "off",
+                data: { geolocation_target: "input" },
+                class: "w-full rounded-2xl border-2 border-[#E6D5B8] bg-white px-4 py-3.5 text-base font-bold text-[#3D2B1F] placeholder-[#B8A693] focus:border-[#E07A2E] focus:outline-none shadow-xs" %>
+        </div>
+
+        <%# 全国主要駅のクイック選択チップ（8駅） %>
+        <% major_stations = %w[東京駅 新宿駅 横浜駅 名古屋駅 大阪駅 京都駅 博多駅 札幌駅] %>
+        <div class="flex flex-wrap justify-start gap-2">
+          <% major_stations.each do |station| %>
+            <button type="button"
+                    data-action="click->geolocation#selectStation"
+                    data-station-name="<%= station %>"
+                    class="px-3.5 py-1.5 rounded-full bg-white hover:bg-[#FFF9EE] active:scale-95 border border-[#E6D5B8] hover:border-[#E07A2E] text-xs font-bold text-[#5C4433] shadow-2xs transition-all">
+              <%= station %>
+            </button>
+          <% end %>
+        </div>
+
+        <%# 次へ進むボタン %>
         <button type="submit"
-                name="departure"
-                value="<%= item[:value] %>"
-                class="group relative w-full text-left bg-[#FFFDF9]/95 hover:bg-[#FFF9EE] active:scale-[0.99] transition-all duration-150 rounded-2xl border-2 <%= is_selected ? 'border-[#E07A1B] shadow-md' : 'border-[#F0DEC6] shadow-sm hover:border-[#E59849]' %> flex items-stretch">
-
-          <%# 左側の半円切り欠き %>
-          <span class="pointer-events-none absolute -left-[15px] top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#FAF6F0] border-2 border-transparent <%= is_selected ? 'border-r-[#E07A1B] border-t-[#E07A1B] border-b-[#E07A1B]' : 'border-r-[#F0DEC6] border-t-[#F0DEC6] border-b-[#F0DEC6] group-hover:border-r-[#E59849] group-hover:border-t-[#E59849] group-hover:border-b-[#E59849]' %> z-10 transition-colors duration-150"></span>
-          <span class="pointer-events-none absolute -left-[16px] top-1/2 -translate-y-1/2 w-[14px] h-8 bg-[#FAF6F0] z-20"></span>
-
-          <%# 右側の半円切り欠き %>
-          <span class="pointer-events-none absolute -right-[15px] top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#FAF6F0] border-2 border-transparent <%= is_selected ? 'border-l-[#E07A1B] border-t-[#E07A1B] border-b-[#E07A1B]' : 'border-l-[#F0DEC6] border-t-[#F0DEC6] border-b-[#F0DEC6] group-hover:border-l-[#E59849] group-hover:border-t-[#E59849] group-hover:border-b-[#E59849]' %> z-10 transition-colors duration-150"></span>
-          <span class="pointer-events-none absolute -right-[16px] top-1/2 -translate-y-1/2 w-[14px] h-8 bg-[#FAF6F0] z-20"></span>
-
-          <%# チケット左半券（メイン情報） %>
-          <div class="flex-1 py-3.5 pl-7 pr-3">
-            <div class="flex items-center gap-2.5 mb-1">
-              <span class="text-lg font-extrabold text-[#3D2B1F] group-hover:text-[#C86D1F] transition-colors">
-                <%= item[:title] %>
-              </span>
-              <span class="text-[11px] font-bold text-[#6E543B] bg-[#FDEBD0] px-2.5 py-0.5 rounded-md">
-                <%= item[:badge] %>
-              </span>
-            </div>
-            <p class="text-xs font-medium text-[#5C4738]">
-              <%= item[:subtitle] %>
-            </p>
-          </div>
-
-          <%# ミシン目（破線）＋ チケット右半券（肉球スタンプ枠） %>
-          <div class="w-24 border-l-2 border-dashed <%= is_selected ? 'border-[#E07A1B]' : 'border-[#E6D5B8] group-hover:border-[#E59849]' %> flex items-center justify-center pr-3">
-            <div class="w-11 h-11 rounded-full border border-dashed border-[#D6B892] bg-[#FDEBD0]/70 group-hover:bg-[#FDE6C4] group-hover:rotate-12 flex items-center justify-center transition-all duration-200">
-              <span class="text-lg select-none">🐾</span>
-            </div>
-          </div>
-
+                class="w-full py-3.5 rounded-full bg-[#E07A2E] hover:bg-[#C8681E] active:scale-[0.99] text-white font-extrabold text-base shadow-md transition-all flex items-center justify-center gap-2">
+          <span>つぎへ</span>
+          <span>🐾</span>
         </button>
       <% end %>
-    <% end %>
+    </div>
 
     <!-- 4. 最下部エリア -->
-    <div class="relative -mx-5 mt-auto overflow-hidden">
+    <div class="relative -mx-5 mt-auto pt-4 overflow-hidden">
       <%= image_tag "step_bg_bottom.png",
             alt: "",
+            width: 853,
+            height: 308,
             class: "w-full h-auto block select-none pointer-events-none" %>
       <div class="absolute inset-x-0 top-0 h-15 bg-gradient-to-b from-[#FAF6F0] to-transparent z-10 pointer-events-none"></div>
       <div class="absolute inset-x-0 bottom-5 z-20 text-center">
