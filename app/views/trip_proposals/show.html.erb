@@ -1,0 +1,99 @@
+<div class="min-h-screen bg-[#FCEFE3] pb-12 font-sans text-[#4A3A2A] relative overflow-x-hidden">
+  <!-- 上部の濃いオレンジ背景（斜めカット） -->
+  <div class="absolute top-0 left-0 w-full h-[200px] bg-gradient-to-b from-[#E58A53] to-[#EA9662] z-0" style="clip-path: polygon(0 0, 100% 0, 100% 75%, 0 92%);"></div>
+
+  <div class="max-w-[420px] mx-auto px-4 pt-6 relative z-10 space-y-5">
+    <!-- 戻るリンク -->
+    <div>
+      <%= link_to "← 3案一覧に戻る",
+                  proposals_path,
+                  class: "inline-flex items-center text-sm font-bold text-white/95 hover:text-white drop-shadow-sm" %>
+    </div>
+
+    <!-- プラン概要カード -->
+    <div class="rounded-[22px] border-[1.5px] border-[#F0D6C0] bg-[#FFFDFB] p-5 shadow-[0_4px_14px_rgba(159,72,19,0.08)] space-y-3">
+      <div class="flex items-center justify-between gap-2">
+        <span class="inline-flex items-center gap-1.5 rounded-full border border-[#E89B65] bg-[#FFF9F3] px-3 py-1 text-xs font-extrabold text-[#C86528]">
+          <span class="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#E88B44] text-[10px] text-white">
+            <%= ("A".ord + @plan_index).chr %>
+          </span>
+          プラン <%= @plan_index + 1 %>
+        </span>
+        <span class="rounded-full border border-[#F0C9AC] bg-[#FFF9F3] px-2.5 py-0.5 text-xs font-bold text-[#9F4813]">
+          📍 <%= @plan["area"] %>
+        </span>
+      </div>
+
+      <h1 class="text-[20px] font-extrabold text-[#3D2B1F] leading-snug">
+        <%= @plan["title"] %>
+      </h1>
+
+      <p class="text-[13px] leading-relaxed text-[#5C4738]">
+        <%= @plan["summary"] %>
+      </p>
+
+      <div class="flex flex-wrap gap-2 pt-1 text-xs font-bold text-[#7A5236]">
+        <span class="rounded-lg border border-[#F0D6C0] bg-[#FFF9F3] px-2.5 py-1">
+          💰 <%= @plan["estimated_budget"] %>
+        </span>
+        <span class="rounded-lg border border-[#F0D6C0] bg-[#FFF9F3] px-2.5 py-1">
+          🚃 <%= @plan["travel_time"] %>
+        </span>
+      </div>
+    </div>
+
+    <!-- タイムスケジュール -->
+    <div class="rounded-[22px] border-[1.5px] border-[#F0D6C0] bg-[#FFFDFB] p-5 shadow-[0_4px_14px_rgba(159,72,19,0.08)]">
+      <h2 class="mb-4 text-[16px] font-extrabold text-[#C86528] tracking-wide">
+        タイムスケジュール
+      </h2>
+
+      <ol class="relative border-l-2 border-dashed border-[#E89B65] ml-2 space-y-6">
+        <% @plan["spots"].each do |spot| %>
+          <li class="ml-5">
+            <span class="absolute -left-[9px] flex h-4 w-4 items-center justify-center rounded-full bg-[#E88B44] ring-4 ring-[#FFFDFB]"></span>
+
+            <div class="mb-1 flex flex-wrap items-center gap-2">
+              <time class="text-sm font-extrabold text-[#B86B35]">
+                <%= spot["time"] %>
+              </time>
+              <span class="rounded-md border border-[#F0D6C0] bg-[#FFF9F3] px-2 py-0.5 text-xs font-bold text-[#7A5236]">
+                <%= spot["category"] %>
+              </span>
+              <% if spot["estimated_cost"].present? %>
+                <span class="rounded-md border border-[#F0C9AC] bg-[#FCEFE3]/70 px-2 py-0.5 text-xs font-bold text-[#9F4813]">
+                  💰 <%= spot["estimated_cost"] %>
+                </span>
+              <% end %>
+            </div>
+
+            <h3 class="text-[15px] font-extrabold text-[#3D2B1F]">
+              <%= spot["name"] %>
+            </h3>
+
+            <p class="mt-1 text-[13px] leading-relaxed text-[#5C4738]">
+              <%= spot["description"] %>
+            </p>
+          </li>
+        <% end %>
+      </ol>
+
+      <p class="mt-5 border-t border-[#F0D6C0]/70 pt-3 text-xs leading-relaxed text-[#8C705B]">
+        ※ 金額は1人あたりの目安です。全体の目安予算には、往復の交通費やその他の飲食・お土産代も含まれています。
+      </p>
+    </div>
+
+    <!-- アクションボタン -->
+    <div class="space-y-3 pt-1">
+      <%# 次のIssue（旅のしおり保存機能）でここをDB保存用のPOSTパスに繋ぎます %>
+      <%= button_to "このプランで旅のしおりを作る！ 🐾",
+                    "#",
+                    disabled: true,
+                    class: "flex justify-center items-center w-full h-[54px] rounded-full bg-gradient-to-b from-[#EEA065] to-[#DF7D3E] text-white text-[15px] font-extrabold shadow-[0_4px_10px_rgba(215,115,55,0.3)] opacity-60 cursor-not-allowed" %>
+
+      <%= link_to "他のプランも見てみる",
+                  proposals_path,
+                  class: "flex justify-center items-center w-full h-[50px] rounded-full bg-[#FFFDFB] text-[#5A3E2B] text-sm font-extrabold border-[1.5px] border-[#E5B089] shadow-[0_2px_6px_rgba(159,72,19,0.06)] hover:bg-[#FFF9F4] active:translate-y-0.5 transition-all" %>
+    </div>
+  </div>
+</div>

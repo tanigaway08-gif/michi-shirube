@@ -97,6 +97,8 @@ module Openai
         - 各プランのスポット数は3〜4箇所に絞ること。
         - 各スポットの説明（description）は40文字以内で簡潔にすること。
         - 実在する一般的なスポット名・エリア名を使うこと。
+        - 金額はすべて「1人あたり」の目安で統一すること。
+        - プランの目安予算（estimated_budget）は、各スポットの目安金額の合計に、往復交通費やちょっとした飲食・お土産代を加えた現実的な金額にすること。
 
         # 出力JSONフォーマット
         {
@@ -111,6 +113,7 @@ module Openai
                 {
                   "time": "10:00",
                   "name": "スポット名",
+                  "estimated_cost": "目安金額（例：約1,500円、無料）",
                   "category": "グルメ / 観光 / カフェ / 自然 / 体験 のいずれか",
                   "description": "見どころや楽しみ方（40文字以内）"
                 }
@@ -150,9 +153,9 @@ module Openai
             "estimated_budget" => "約4,200円",
             "travel_time" => "電車で約30分",
             "spots" => [
-              { "time" => "10:00", "name" => "南京町", "category" => "グルメ", "description" => "食べ歩きで熱々の豚まんや小籠包を満喫。" },
-              { "time" => "12:00", "name" => "メリケンパーク", "category" => "観光", "description" => "海風を感じながら港のシンボルを背景に記念撮影。" },
-              { "time" => "14:00", "name" => "旧居留地カフェ", "category" => "カフェ", "description" => "レトロな洋館で香り高いコーヒーとケーキを一息。" }
+              { "time" => "10:00", "name" => "南京町", "category" => "グルメ", "estimated_cost" => "約1,500円", "description" => "食べ歩きで熱々の豚まんや小籠包を満喫。" },
+              { "time" => "12:00", "name" => "メリケンパーク", "category" => "観光", "estimated_cost" => "約1,500円", "description" => "海風を感じながら港のシンボルを背景に記念撮影。" },
+              { "time" => "14:00", "name" => "旧居留地カフェ", "category" => "カフェ", "estimated_cost" => "約1,500円", "description" => "レトロな洋館で香り高いコーヒーとケーキを一息。" }
             ]
           },
           {
@@ -162,9 +165,9 @@ module Openai
             "estimated_budget" => "約4,800円",
             "travel_time" => "電車で約50分",
             "spots" => [
-              { "time" => "10:30", "name" => "平等院鳳凰堂", "category" => "観光", "description" => "池に映る優美な姿と庭園をゆっくり鑑賞。" },
-              { "time" => "12:30", "name" => "宇治橋通り商店街", "category" => "グルメ", "description" => "茶そばランチで京都らしい味わいを堪能。" },
-              { "time" => "14:30", "name" => "老舗茶舗の甘味処", "category" => "カフェ", "description" => "濃厚な抹茶パフェで旅の締めくくり。" }
+              { "time" => "10:30", "name" => "平等院鳳凰堂", "category" => "観光", "estimated_cost" => "約1,500円", "description" => "池に映る優美な姿と庭園をゆっくり鑑賞。" },
+              { "time" => "12:30", "name" => "宇治橋通り商店街", "category" => "グルメ", "estimated_cost" => "約1,500円", "description" => "茶そばランチで京都らしい味わいを堪能。" },
+              { "time" => "14:30", "name" => "老舗茶舗の甘味処", "category" => "カフェ", "estimated_cost" => "約1,500円", "description" => "濃厚な抹茶パフェで旅の締めくくり。" }
             ]
           },
           {
@@ -174,9 +177,9 @@ module Openai
             "estimated_budget" => "約3,500円",
             "travel_time" => "電車で約35分",
             "spots" => [
-              { "time" => "10:00", "name" => "箕面大滝", "category" => "自然", "description" => "マイナスイオンたっぷりの遊歩道をハイキング。" },
-              { "time" => "12:30", "name" => "滝道沿いの古民家カフェ", "category" => "グルメ", "description" => "地元野菜を使った彩り豊かなランチプレート。" },
-              { "time" => "14:30", "name" => "もみじの天ぷら専門店", "category" => "観光", "description" => "揚げたてサクサクのご当地名物をお土産に。" }
+              { "time" => "10:00", "name" => "箕面大滝", "category" => "自然", "estimated_cost" => "約1,500円", "description" => "マイナスイオンたっぷりの遊歩道をハイキング。" },
+              { "time" => "12:30", "name" => "滝道沿いの古民家カフェ", "category" => "グルメ", "estimated_cost" => "約1,500円", "description" => "地元野菜を使った彩り豊かなランチプレート。" },
+              { "time" => "14:30", "name" => "もみじの天ぷら専門店", "category" => "観光", "estimated_cost" => "約1,500円", "description" => "揚げたてサクサクのご当地名物をお土産に。" }
             ]
           }
         ]
