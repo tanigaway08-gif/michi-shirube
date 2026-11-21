@@ -220,16 +220,17 @@
 
     <!-- 3. アクションボタン（AI提案を実行するメインCTA） -->
     <div class="relative z-10 mt-6 space-y-3">
-      <%# ※送信先パス（trips_path または propose_trips_path）は実装に合わせて変更してください %>
-      <%= form_with url: trips_path, method: :post, local: true do %>
+      <%= form_with url: proposals_path, method: :post do %>
         <button type="submit"
-                class="relative w-full flex justify-center items-center h-[58px] rounded-full bg-gradient-to-b from-[#EEA065] to-[#DF7D3E] text-white text-[17px] font-extrabold shadow-[0_5px_14px_rgba(215,115,55,0.4)] hover:opacity-95 active:translate-y-0.5 transition-all cursor-pointer">
+                data-turbo-submits-with="しるべ駅長が探し中... 🐾"
+                class="relative w-full flex justify-center items-center h-[58px] rounded-full bg-gradient-to-b from-[#EEA065] to-[#DF7D3E] text-white text-[17px] font-extrabold shadow-[0_5px_14px_rgba(215,115,55,0.4)] hover:opacity-95 active:translate-y-0.5 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-wait">
           <span class="tracking-wider">この条件で旅先を3つ探す！</span>
           <svg class="w-5 h-5 absolute right-6 text-white/95" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
           </svg>
         </button>
       <% end %>
+    </div>
 
       <div class="text-center pt-1">
         <%= link_to "最初からやり直す（トップ画面へ）", root_path,

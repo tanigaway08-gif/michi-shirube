@@ -1,0 +1,70 @@
+<div class="min-h-screen bg-[#FCEFE3] pb-12 font-sans text-[#4A3A2A] relative overflow-x-hidden">
+  <!-- 上部の濃いオレンジ背景（斜めカット） -->
+  <div class="absolute top-0 left-0 w-full h-[220px] bg-gradient-to-b from-[#E58A53] to-[#EA9662] z-0" style="clip-path: polygon(0 0, 100% 0, 100% 75%, 0 92%);"></div>
+
+  <div class="max-w-[420px] mx-auto px-4 pt-8 relative z-10 space-y-6">
+    <!-- ヘッダー -->
+    <header class="text-center space-y-2 text-white pb-2">
+      <p class="inline-block rounded-full bg-[#FFFDFB]/20 backdrop-blur-[2px] border border-white/50 px-3.5 py-1 text-xs font-bold tracking-wider text-white">
+        しるべ駅長のおすすめ 🐾
+      </p>
+      <h1 class="text-[22px] font-extrabold tracking-wide drop-shadow-sm">
+        ぴったりの旅先を3つ見つけたよ！
+      </h1>
+      <p class="text-xs text-white/90 font-medium">
+        気になるプランを選んで、詳しいスケジュールを見てみよう
+      </p>
+    </header>
+
+    <!-- 3案カード一覧 -->
+    <div class="space-y-4">
+      <% @plans.each_with_index do |plan, index| %>
+        <div class="rounded-[22px] border-[1.5px] border-[#F0D6C0] bg-[#FFFDFB] p-5 shadow-[0_4px_14px_rgba(159,72,19,0.08)] transition hover:shadow-[0_6px_18px_rgba(159,72,19,0.12)]">
+          <div class="mb-2.5 flex items-center justify-between gap-2">
+            <span class="inline-flex items-center gap-1.5 rounded-full border border-[#E89B65] bg-[#FFF9F3] px-3 py-1 text-xs font-extrabold text-[#C86528]">
+              <span class="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#E88B44] text-[10px] text-white">
+                <%= ("A".ord + index).chr %>
+              </span>
+              プラン <%= index + 1 %>
+            </span>
+            <span class="rounded-full border border-[#F0C9AC] bg-[#FFF9F3] px-2.5 py-0.5 text-xs font-bold text-[#9F4813]">
+              📍 <%= plan["area"] %>
+            </span>
+          </div>
+
+          <h2 class="mb-2 text-[17px] font-extrabold text-[#3D2B1F] leading-snug">
+            <%= plan["title"] %>
+          </h2>
+
+          <p class="mb-4 text-[13px] leading-relaxed text-[#5C4738]">
+            <%= plan["summary"] %>
+          </p>
+
+          <div class="mb-4 flex flex-wrap gap-2 text-xs font-bold text-[#7A5236]">
+            <span class="rounded-lg border border-[#F0D6C0] bg-[#FFF9F3] px-2.5 py-1">
+              💰 <%= plan["estimated_budget"] %>
+            </span>
+            <span class="rounded-lg border border-[#F0D6C0] bg-[#FFF9F3] px-2.5 py-1">
+              🚃 <%= plan["travel_time"] %>
+            </span>
+          </div>
+
+          <%= link_to proposal_path(index),
+                      class: "relative flex justify-center items-center w-full h-[48px] rounded-full bg-gradient-to-b from-[#EEA065] to-[#DF7D3E] text-white text-sm font-extrabold shadow-[0_4px_10px_rgba(215,115,55,0.3)] hover:opacity-95 active:translate-y-0.5 transition-all" do %>
+            <span>詳しいスケジュールを見る 🐾</span>
+            <svg class="w-4 h-4 absolute right-5 text-white/95" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+            </svg>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- フッター -->
+    <div class="pt-2 text-center">
+      <%= link_to "条件を変えて探し直す",
+                  root_path,
+                  class: "inline-flex justify-center items-center w-full h-[50px] rounded-full bg-[#FFFDFB] text-[#5A3E2B] text-sm font-extrabold border-[1.5px] border-[#E5B089] shadow-[0_2px_6px_rgba(159,72,19,0.06)] hover:bg-[#FFF9F4] active:translate-y-0.5 transition-all" %>
+    </div>
+  </div>
+</div>

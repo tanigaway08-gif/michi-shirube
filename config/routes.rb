@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
   root "static_pages#top"
 
+  resources :proposals, only: %i[create index show], controller: "trip_proposals"
+
   resources :trips do
     collection do
       get  :step1
