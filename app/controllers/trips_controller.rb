@@ -118,9 +118,76 @@ class TripsController < ApplicationController
     @companion = @trip_params["companion"]
   end
 
+  def create
+    plans = cached_plans
+    index = Integer(params[:plan_index], exception: false)
+    plan = plans && index && index >= 0 ? plans[index] : nil
+
+    if plan.blank? || session[:trip_params].blank?
+      redirect_to root_path, alert: "提案の有効期限が切れました。もう一度条件を入力してください。"
+      return
+    end
+
+    trip = build_and_save_trip!(plan, session[:trip_params])
+    redirect_to trip_path(trip), notice: "旅のしおりを作成しました！"
+  rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.error("[TripsController#create] #{e.message}")
+    redirect_to proposals_path, alert: "しおりの作成に失敗しました。もう一度お試しください。"
+  end
+
+  def show
+    @trip = Trip.includes(:schedules).find_by!(share_token: params[:share_token])
+  end
+
   private
 
   def initialize_trip_session
     session[:trip_params] ||= {}
+  end
+
+  def cached_plans
+    token = session[:proposal_token]
+    return nil if token.blank?
+
+    Rails.cache.read("trip_proposals:#{token}")
+  end
+
+  def build_and_save_trip!(plan, trip_params)
+    ActiveRecord::Base.transaction do
+      trip = Trip.create!(
+        duration: trip_params["duration"],
+        budget: trip_params["budget"].to_i,
+        departure: trip_params["departure"],
+        transport: trip_params["transport"],
+        companion: trip_params["companion"],
+        title: plan["title"],
+        prefecture: Trip.detect_prefecture(plan["area"]),
+        area: plan["area"],
+        travel_time: plan["travel_time"],
+        description: plan["summary"],
+        estimated_cost: extract_cost(plan["estimated_budget"])
+      )
+
+      Array(plan["spots"]).each do |spot|
+        trip.schedules.create!(
+          day_number: 1,
+          start_time: spot["time"],
+          place_name: spot["name"],
+          category: spot["category"],
+          estimated_cost: spot["estimated_cost"],
+          content: spot["description"]
+        )
+      end
+
+      trip
+    end
+  end
+
+  def extract_cost(text)
+    return nil if text.blank?
+
+    # "約4,200円" や "約7,000〜10,000円" から先頭の数値（4200, 7000）を抽出
+    digits = text.tr("０-９，", "0-9,").scan(/\d[\d,]*/).first
+    digits&.delete(",")&.to_i
   end
 end
