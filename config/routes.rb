@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   resources :proposals, only: %i[create index show], controller: "trip_proposals"
 
-  resources :trips do
+  resources :trips, only: %i[new create show], param: :share_token do
     collection do
       get  :step1
       post :save_step1

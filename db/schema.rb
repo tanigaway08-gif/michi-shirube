@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_11_09_224429) do
+ActiveRecord::Schema[8.0].define(version: 2026_11_22_204901) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_11_09_224429) do
     t.integer "day_number", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "category"
+    t.string "estimated_cost"
     t.index ["trip_id"], name: "index_schedules_on_trip_id"
   end
 
@@ -40,6 +42,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_11_09_224429) do
     t.boolean "is_visited", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "area"
+    t.string "travel_time"
     t.index ["share_token"], name: "index_trips_on_share_token", unique: true
   end
 

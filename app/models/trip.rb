@@ -43,6 +43,32 @@ enum :duration, {
   validates :budget, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :share_token, presence: true, uniqueness: true
 
+  PREFECTURE_NAMES = {
+    "北海道" => :hokkaido, "青森" => :aomori, "岩手" => :iwate, "宮城" => :miyagi,
+    "秋田" => :akita, "山形" => :yamagata, "福島" => :fukushima, "茨城" => :ibaraki,
+    "栃木" => :tochigi, "群馬" => :gunma, "埼玉" => :saitama, "千葉" => :chiba,
+    "東京" => :tokyo, "神奈川" => :kanagawa, "新潟" => :niigata, "富山" => :toyama,
+    "石川" => :ishikawa, "福井" => :fukui, "山梨" => :yamanashi, "長野" => :nagano,
+    "岐阜" => :gifu, "静岡" => :shizuoka, "愛知" => :aichi, "三重" => :mie,
+    "滋賀" => :shiga, "京都" => :kyoto, "大阪" => :osaka, "兵庫" => :hyogo,
+    "奈良" => :nara, "和歌山" => :wakayama, "鳥取" => :tottori, "島根" => :shimane,
+    "岡山" => :okayama, "広島" => :hiroshima, "山口" => :yamaguchi, "徳島" => :tokushima,
+    "香川" => :kagawa, "愛媛" => :ehime, "高知" => :kochi, "福岡" => :fukuoka,
+    "佐賀" => :saga, "長崎" => :nagasaki, "熊本" => :kumamoto, "大分" => :oita,
+    "宮崎" => :miyazaki, "鹿児島" => :kagoshima, "沖縄" => :okinawa
+  }.freeze
+
+  def to_param
+    share_token
+  end
+
+  def self.detect_prefecture(area_text)
+    return :osaka if area_text.blank?
+
+    matched = PREFECTURE_NAMES.find { |name, _| area_text.include?(name) }
+    matched ? matched.last : :osaka
+  end
+
   private
 
   def generate_share_token
