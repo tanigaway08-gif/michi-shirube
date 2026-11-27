@@ -128,7 +128,7 @@ class TripsController < ApplicationController
       return
     end
 
-    trip = build_and_save_trip!(plan, session[:trip_params])
+    trip = Trips::CreateService.new(plan: plan, trip_params: session[:trip_params]).call
     redirect_to trip_path(trip), notice: "旅のしおりを作成しました！"
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error("[TripsController#create] #{e.message}")
@@ -150,44 +150,5 @@ class TripsController < ApplicationController
     return nil if token.blank?
 
     Rails.cache.read("trip_proposals:#{token}")
-  end
-
-  def build_and_save_trip!(plan, trip_params)
-    ActiveRecord::Base.transaction do
-      trip = Trip.create!(
-        duration: trip_params["duration"],
-        budget: trip_params["budget"].to_i,
-        departure: trip_params["departure"],
-        transport: trip_params["transport"],
-        companion: trip_params["companion"],
-        title: plan["title"],
-        prefecture: Trip.detect_prefecture(plan["area"]),
-        area: plan["area"],
-        travel_time: plan["travel_time"],
-        description: plan["summary"],
-        estimated_cost: extract_cost(plan["estimated_budget"])
-      )
-
-      Array(plan["spots"]).each do |spot|
-        trip.schedules.create!(
-          day_number: 1,
-          start_time: spot["time"],
-          place_name: spot["name"],
-          category: spot["category"],
-          estimated_cost: spot["estimated_cost"],
-          content: spot["description"]
-        )
-      end
-
-      trip
-    end
-  end
-
-  def extract_cost(text)
-    return nil if text.blank?
-
-    # "約4,200円" や "約7,000〜10,000円" から先頭の数値（4200, 7000）を抽出
-    digits = text.tr("０-９，", "0-9,").scan(/\d[\d,]*/).first
-    digits&.delete(",")&.to_i
   end
 end
