@@ -14,11 +14,11 @@
       <!-- 駅長のアナウンスエリア（横並びバナー風） -->
       <div class="flex items-center gap-3 bg-white/90 backdrop-blur-xs border-2 border-[#EED9BE] rounded-2xl p-3 shadow-xs">
         <div class="w-16 h-16 rounded-full bg-[#FDEBD0] border-2 border-[#E59849] flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
-          <%= image_tag "shirube_confirm.png", alt: "しるべ駅長", class: "w-14 h-14 object-contain translate-y-1" %>
+          <%= image_tag "shirube_confirm.png", alt: "しるべぇ駅長", class: "w-14 h-14 object-contain translate-y-1" %>
         </div>
         <div class="flex-1">
           <div class="inline-block bg-[#E07A2E] text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full tracking-wider mb-1">
-            しるべ駅長のおすすめ 🐾
+            しるべぇ駅長のおすすめ 🐾
           </div>
           <h1 class="text-[14px] font-extrabold text-[#3D2B1F] leading-snug">
             ぴったりの旅先を3つ見つけたよ！
@@ -63,7 +63,7 @@
             </div>
 
             <%= link_to proposal_path(index),
-                        class: "relative flex justify-center items-center w-full h-[48px] rounded-full bg-gradient-to-b from-[#EEA065] to-[#DF7D3E] text-white text-sm font-extrabold shadow-[0_4px_10px_rgba(215,115,55,0.3)] hover:opacity-95 active:translate-y-0.5 transition-all" do %>
+                        class: "relative flex justify-center items-center w-full h-[48px] rounded-full bg-gradient-to-b from-[#EEA065] to-[#DF7D3E] text-white text-sm font-extrabold shadow-[0_4px_10px_rgba(215,115,55,0.3)] hover:opacity-95 active:scale-95 active:translate-y-1 active:shadow-none active:brightness-95 select-none transition-all duration-100" do %>
               <span>詳しいスケジュールを見る 🐾</span>
               <svg class="w-4 h-4 absolute right-5 text-white/95" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
@@ -77,7 +77,7 @@
       <div class="pt-2 text-center">
         <%= link_to "条件を変えて探し直す",
                     root_path,
-                    class: "inline-flex justify-center items-center w-full h-[50px] rounded-full bg-[#FFFDFB] text-[#5A3E2B] text-sm font-extrabold border-[1.5px] border-[#E5B089] shadow-[0_2px_6px_rgba(159,72,19,0.06)] hover:bg-[#FFF9F4] active:translate-y-0.5 transition-all" %>
+                    class: "inline-flex justify-center items-center w-full h-[50px] rounded-full bg-[#FFFDFB] text-[#5A3E2B] text-sm font-extrabold border-[1.5px] border-[#E5B089] shadow-[0_2px_6px_rgba(159,72,19,0.06)] hover:bg-[#FFF9F4] active:bg-[#F7E6D5] active:scale-95 active:translate-y-1 active:shadow-none select-none transition-all duration-100" %>
       </div>
     </div>
 

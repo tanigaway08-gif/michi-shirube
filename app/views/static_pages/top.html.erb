@@ -11,12 +11,6 @@
 
       <!-- ヘッダータイトル（濃いオレンジ部分） -->
       <header class="relative text-center pt-1 pb-6 text-white">
-        <!-- 左上：メニューアイコン -->
-        <button type="button" class="absolute left-1 top-2 text-white/90 hover:text-white p-1">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-          </svg>
-        </button>
 
         <!-- 中央：飛行機＆アーチ文字 -->
         <div class="flex flex-col items-center">
@@ -64,19 +58,21 @@
           ] %>
           <% current_pref = prefectures.sample %>
 
-          <%# --- ご当地背景 ＋ しるべ駅長を重ねるエリア --- %>
-          <div class="relative my-1 rounded-2xl overflow-hidden bg-[#F9DEC9] border border-[#F0C9AC]">
+          <%# --- ご当地背景 ＋ しるべぇ駅長を重ねるエリア --- %>
+          <div class="relative my-1 w-full aspect-[3/2] rounded-2xl overflow-hidden bg-[#F9DEC9] border border-[#F0C9AC]">
             <%= image_tag "prefectures/#{current_pref[:file]}",
                 alt: current_pref[:name],
-                class: "w-full h-auto block opacity-90" %>
+                fetchpriority: "high",
+                class: "w-full h-full object-cover block opacity-90" %>
 
             <span class="absolute top-2.5 right-2.5 z-20 bg-[#FFFDFB]/90 backdrop-blur-sm text-[#9F4813] text-xs font-extrabold px-2.5 py-1 rounded-full shadow-sm border border-[#F0C9AC]">
               📍 <%= current_pref[:name] %>
             </span>
 
             <%= image_tag "shirube.png",
-                alt: "しるべ駅長",
-                style: "bottom: 0px; width: 180px;",
+                alt: "しるべぇ駅長",
+                fetchpriority: "high",
+                style: "bottom: 10px; width: 180px;",
                 class: "absolute left-1/2 -translate-x-1/2 z-10 h-auto object-contain drop-shadow-[0_4px_6px_rgba(0,0,0,0.25)]" %>
           </div>
         </div>
@@ -98,7 +94,7 @@
       <!-- 2. アクションボタン（新デザイン） -->
       <section class="flex flex-col gap-3.5 mb-6">
         <!-- はじめるボタン -->
-        <%= link_to new_trip_path, class: "relative flex justify-center items-center h-[56px] rounded-full bg-gradient-to-b from-[#EEA065] to-[#DF7D3E] text-white text-[17px] font-extrabold shadow-[0_4px_10px_rgba(215,115,55,0.35)] hover:opacity-95 active:translate-y-0.5 transition-all" do %>
+        <%= link_to new_trip_path, class: "relative flex justify-center items-center h-[56px] rounded-full bg-gradient-to-b from-[#EEA065] to-[#DF7D3E] text-white text-[17px] font-extrabold shadow-[0_4px_10px_rgba(215,115,55,0.35)] hover:opacity-95 active:scale-95 active:translate-y-1 active:shadow-none active:brightness-95 select-none transition-all duration-100" do %>
           <span class="tracking-wider">はじめる</span>
           <svg class="w-5 h-5 absolute right-6 text-white/95" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
@@ -109,13 +105,13 @@
         <% if @latest_trip.present? %>
           <%= link_to "最新のしおりを見る",
                       trip_path(@latest_trip),
-                      class: "flex justify-center items-center h-[54px] rounded-full bg-[#FFFDFB] text-[#5A3E2B] text-[16px] font-extrabold border-[1.5px] border-[#E5B089] shadow-[0_2px_6px_rgba(159,72,19,0.06)] hover:bg-[#FFF9F4] active:translate-y-0.5 transition-all tracking-wide" %>
+                      class: "flex justify-center items-center h-[54px] rounded-full bg-[#FFFDFB] text-[#5A3E2B] text-[16px] font-extrabold border-[1.5px] border-[#E5B089] shadow-[0_2px_6px_rgba(159,72,19,0.06)] hover:bg-[#FFF9F4] active:scale-95 active:translate-y-1 active:shadow-none active:bg-[#F7E6D5] select-none transition-all duration-100 tracking-wide" %>
         <% else %>
           <span class="flex justify-center items-center h-[54px] rounded-full bg-[#FFFDFB]/60 text-[#5A3E2B]/40 text-[15px] font-extrabold border-[1.5px] border-[#E5B089]/50 cursor-not-allowed tracking-wide">
             まだしおりがありません
           </span>
         <% end %>
-      </section>
+      </section> 
 
 <!-- お悩み解決セクション（付箋メモ＆マスキングテープ風） -->
 <section class="bg-[#FFF9F3] rounded-[24px] p-5 mb-5 border-[1.5px] border-[#F0D6C0] shadow-[0_4px_14px_rgba(159,72,19,0.06)]">
@@ -140,7 +136,7 @@
   <!-- 解決メッセージ（破線ボックス） -->
   <div class="rounded-xl bg-[#FCEFE3] border-[1.5px] border-dashed border-[#E5B089] px-3.5 py-3 text-center">
     <p class="text-[13px] font-extrabold text-[#9F4813] leading-relaxed">
-      そんなお悩み、「未知しるべ」がさくっと解決！
+      そんなお悩み、「未知しるべ」がサクっと解決！
     </p>
   </div>
 </section>
@@ -158,7 +154,7 @@
         </div>
 
         <p class="text-[13px] text-[#5C4738] leading-relaxed mb-4 pl-1">
-          行きたい気分を選ぶだけで、簡単に旅程を3つ提案。    気に入ったプランは、ボタン1つで可愛いしおりになります。
+          行きたい気分を選ぶだけで、簡単に旅程を3つ提案。    気に入ったプランは、ボタン1つで可愛い『旅のしおり』になります。
         </p>
 
         <!-- 2カラムプレビュー（旅程プラン3つ ＆ 1日のしおり） -->
@@ -175,7 +171,7 @@
 
           <!-- 右側：1日のしおり -->
           <div class="flex flex-col">
-            <h3 class="text-[12px] font-extrabold mb-2 text-[#3D2B1F] text-center">1日のしおり</h3>
+            <h3 class="text-[12px] font-extrabold mb-2 text-[#3D2B1F] text-center">旅のしおり</h3>
             <div class="rounded-[16px] overflow-hidden border-[1.5px] border-[#F0D6C0] bg-[#FFFDFB] shadow-sm">
               <%= image_tag "trip_show.png",
                   alt: "1日のしおりのサンプル",
@@ -188,10 +184,10 @@
       <!-- ナビゲーター紹介セクション（現在のスタイルを維持） -->
       <section class="bg-[#FFFDFB] rounded-[20px] p-5 flex items-center gap-3.5 shadow-[0_4px_12px_rgba(159,72,19,0.05)]">
         <div class="shrink-0">
-          <%= image_tag "shirube.png", alt: "しるべ駅長", class: "w-[85px] h-auto object-contain" %>
+          <%= image_tag "shirube.png", alt: "しるべぇ駅長", class: "w-[85px] h-auto object-contain" %>
         </div>
         <div>
-          <h2 class="text-[#9F4813] text-[15.5px] font-extrabold mb-1.5">ナビゲーター：しるべ駅長</h2>
+          <h2 class="text-[#9F4813] text-[15.5px] font-extrabold mb-1.5">ナビゲーター：しるべぇ駅長</h2>
           <p class="text-xs leading-relaxed mb-2">
             地図が大好きな、赤いトイプードルの駅長さん。旅の相談役として、道しるべになってくれます。
           </p>

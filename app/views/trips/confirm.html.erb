@@ -50,7 +50,7 @@
     <!-- 1. 駅長のアナウンスエリア（選択画面と違う横並びバナー風） -->
     <div class="relative z-10 mt-4 mb-3 flex items-center gap-3 bg-white/90 backdrop-blur-xs border-2 border-[#EED9BE] rounded-2xl p-3 shadow-xs">
       <div class="w-16 h-16 rounded-full bg-[#FDEBD0] border-2 border-[#E59849] flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
-        <%= image_tag "shirube_confirm.png", alt: "しるべ駅長", class: "w-14 h-14 object-contain translate-y-1" %>
+        <%= image_tag "shirube_confirm.png", alt: "しるべぇ駅長", class: "w-14 h-14 object-contain translate-y-1" %>
       </div>
       <div class="flex-1">
         <div class="inline-block bg-[#E07A2E] text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full tracking-wider mb-1">
@@ -211,7 +211,7 @@
 
       <!-- チケット下部：検札スタンプ風フッター -->
       <div class="bg-[#FDF6EC] rounded-b-[22px] px-5 py-2.5 border-t border-dashed border-[#E6D5B8] flex items-center justify-between">
-        <span class="text-[11px] font-bold text-[#8A6D53]">検札：しるべ駅長</span>
+        <span class="text-[11px] font-bold text-[#8A6D53]">検札：しるべぇ駅長</span>
         <span class="inline-flex items-center gap-1 text-[11px] font-extrabold text-[#C86D1F] bg-[#FFF8EE] px-2.5 py-0.5 rounded-md -rotate-2">
           🐾 準備OK
         </span>
@@ -222,7 +222,7 @@
     <div class="relative z-10 mt-6 space-y-3">
       <%= form_with url: proposals_path, method: :post do %>
         <button type="submit"
-                data-turbo-submits-with="しるべ駅長が探し中... 🐾"
+                data-turbo-submits-with="しるべぇ駅長が探し中... 🐾"
                 class="relative w-full flex justify-center items-center h-[58px] rounded-full bg-gradient-to-b from-[#EEA065] to-[#DF7D3E] text-white text-[17px] font-extrabold shadow-[0_5px_14px_rgba(215,115,55,0.4)] hover:opacity-95 active:translate-y-0.5 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-wait">
           <span class="tracking-wider">この条件で旅先を3つ探す！</span>
           <svg class="w-5 h-5 absolute right-6 text-white/95" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">

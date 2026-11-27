@@ -9,8 +9,15 @@ export default class extends Controller {
     if (!stationName) return
 
     this.inputTarget.value = stationName
-    this.inputTarget.focus()
     this.showStatus(`「${stationName}」を出発地にセットしました！🐾`, false)
+    this.scrollToBottom()
+  }
+
+  // 手入力のために入力欄をタップしてキーボードが出た時に一番下へスクロール
+  scrollOnFocus() {
+    setTimeout(() => {
+      this.scrollToBottom()
+    }, 300)
   }
 
   // 「いまいる場所から探す」ボタン押下時
@@ -76,11 +83,18 @@ export default class extends Controller {
 
       btn.addEventListener("click", () => {
         this.inputTarget.value = st.name
-        this.inputTarget.focus()
         this.showStatus(`「${st.name}」を出発地にセットしました！🐾`, false)
+        this.scrollToBottom()
       })
 
       this.resultsTarget.appendChild(btn)
+    })
+  }
+
+  scrollToBottom() {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: "smooth"
     })
   }
 
