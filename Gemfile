@@ -71,7 +71,7 @@ group :test do
   gem "simplecov", require: false
 end
 
-gem "json", "< 2.10.0"
+gem "json", "< 3.3.0"
 
 group :development, :test do
   gem "dotenv-rails"
