@@ -14,7 +14,7 @@
     <!-- ステータスバー ＋ キャラクター＆吹き出しエリア（背景画像が切れない構造） -->
     <div class="relative -mx-5 overflow-hidden">
       <%= image_tag "shirube_step3.png",
-            alt: "出発地を尋ねるしるべ駅長",
+            alt: "出発地を尋ねるしるべぇ駅長",
             width: 1477,
             height: 1065,
             fetchpriority: "high",
@@ -79,7 +79,7 @@
         <button type="button"
                 data-geolocation-target="button"
                 data-action="click->geolocation#findNearestStations"
-                class="w-full py-3.5 px-4 rounded-full bg-white hover:bg-[#FFF9EE] active:scale-[0.99] border-2 border-[#E6D5B8] hover:border-[#E07A2E] text-[#3D2B1F] font-extrabold text-[15px] flex items-center justify-center gap-2 shadow-sm transition-all disabled:opacity-50">
+                class="w-full py-3.5 px-4 rounded-full bg-white hover:bg-[#FFF9EE] active:bg-[#F7E6D5] active:scale-95 active:translate-y-1 active:shadow-none select-none border-2 border-[#E6D5B8] hover:border-[#E07A2E] text-[#3D2B1F] font-extrabold text-[15px] flex items-center justify-center gap-2 shadow-sm transition-all duration-100 disabled:opacity-50">
           <span class="text-lg leading-none">📍</span>
           <span>いまいる場所から探す</span>
         </button>
@@ -111,7 +111,10 @@
                 id: "departure_input",
                 placeholder: "例：東京駅・大阪駅",
                 autocomplete: "off",
-                data: { geolocation_target: "input" },
+                data: {
+                  geolocation_target: "input",
+                  action: "focus->geolocation#scrollOnFocus"
+                },
                 class: "w-full rounded-2xl border-2 border-[#E6D5B8] bg-white px-4 py-3.5 text-base font-bold text-[#3D2B1F] placeholder-[#B8A693] focus:border-[#E07A2E] focus:outline-none shadow-xs" %>
         </div>
 
@@ -130,7 +133,7 @@
 
         <%# 次へ進むボタン %>
         <button type="submit"
-                class="w-full py-3.5 rounded-full bg-[#E07A2E] hover:bg-[#C8681E] active:scale-[0.99] text-white font-extrabold text-base shadow-md transition-all flex items-center justify-center gap-2">
+                class="w-full py-3.5 rounded-full bg-[#E07A2E] hover:bg-[#C8681E] active:scale-95 active:translate-y-1 active:shadow-none active:brightness-95 select-none text-white font-extrabold text-base shadow-md transition-all duration-100 flex items-center justify-center gap-2">
           <span>つぎへ</span>
           <span>🐾</span>
         </button>

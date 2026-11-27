@@ -14,7 +14,7 @@
     <div class="relative -mx-5 overflow-hidden">
       <!-- 背景画像（width/height と fetchpriority で読み込み時のガタつきを防止） -->
       <%= image_tag "shirube_step5.png",
-            alt: "同行者を尋ねるしるべ駅長",
+            alt: "同行者を尋ねるしるべぇ駅長",
             width: 1477,
             height: 1065,
             fetchpriority: "high",
@@ -111,7 +111,7 @@
         <button type="submit"
                 name="companion"
                 value="<%= item[:value] %>"
-                class="group relative w-full text-left bg-[#FFFDF9]/95 hover:bg-[#FFF9EE] active:scale-[0.99] transition-all duration-150 rounded-2xl border-2 <%= is_selected ? 'border-[#E07A1B] shadow-md' : 'border-[#F0DEC6] shadow-sm hover:border-[#E59849]' %> flex items-stretch">
+                class="group relative w-full text-left bg-[#FFFDF9]/95 hover:bg-[#FFF9EE] active:bg-[#F7E6D5] active:scale-95 active:translate-y-1 active:shadow-none select-none transition-all duration-100 rounded-2xl border-2 <%= is_selected ? 'border-[#E07A1B] shadow-md' : 'border-[#F0DEC6] shadow-sm hover:border-[#E59849]' %> flex items-stretch">
 
           <%# 左側の半円切り欠き %>
           <span class="pointer-events-none absolute -left-[15px] top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#FAF6F0] border-2 border-transparent <%= is_selected ? 'border-r-[#E07A1B] border-t-[#E07A1B] border-b-[#E07A1B]' : 'border-r-[#F0DEC6] border-t-[#F0DEC6] border-b-[#F0DEC6] group-hover:border-r-[#E59849] group-hover:border-t-[#E59849] group-hover:border-b-[#E59849]' %> z-10 transition-colors duration-150"></span>
@@ -138,7 +138,7 @@
 
           <%# ミシン目（破線）＋ チケット右半券（肉球スタンプ枠） %>
           <div class="w-24 border-l-2 border-dashed <%= is_selected ? 'border-[#E07A1B]' : 'border-[#E6D5B8] group-hover:border-[#E59849]' %> flex items-center justify-center pr-3">
-            <div class="w-11 h-11 rounded-full border border-dashed border-[#D6B892] bg-[#FDEBD0]/70 group-hover:bg-[#FDE6C4] group-hover:rotate-12 flex items-center justify-center transition-all duration-200">
+            <div class="w-11 h-11 rounded-full border border-dashed border-[#D6B892] bg-[#FDEBD0]/70 group-hover:bg-[#FDE6C4] group-hover:rotate-12 group-active:scale-90 group-active:rotate-12 flex items-center justify-center transition-all duration-150">
               <span class="text-lg select-none">🐾</span>
             </div>
           </div>
