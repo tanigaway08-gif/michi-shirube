@@ -75,3 +75,8 @@ gem "json", "< 2.10.0"
 group :development, :test do
   gem "dotenv-rails"
 end
+
+group :development, :test do
+  gem "rspec-rails"
+  gem "factory_bot_rails"
+end
