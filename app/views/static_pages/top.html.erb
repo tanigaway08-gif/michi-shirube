@@ -106,7 +106,15 @@
         <% end %>
 
         <!-- 最新のしおりを見るボタン -->
-        <%= link_to "最新のしおりを見る", "#", class: "flex justify-center items-center h-[54px] rounded-full bg-[#FFFDFB] text-[#5A3E2B] text-[16px] font-extrabold border-[1.5px] border-[#E5B089] shadow-[0_2px_6px_rgba(159,72,19,0.06)] hover:bg-[#FFF9F4] active:translate-y-0.5 transition-all tracking-wide" %>
+        <% if @latest_trip.present? %>
+          <%= link_to "最新のしおりを見る",
+                      trip_path(@latest_trip),
+                      class: "flex justify-center items-center h-[54px] rounded-full bg-[#FFFDFB] text-[#5A3E2B] text-[16px] font-extrabold border-[1.5px] border-[#E5B089] shadow-[0_2px_6px_rgba(159,72,19,0.06)] hover:bg-[#FFF9F4] active:translate-y-0.5 transition-all tracking-wide" %>
+        <% else %>
+          <span class="flex justify-center items-center h-[54px] rounded-full bg-[#FFFDFB]/60 text-[#5A3E2B]/40 text-[15px] font-extrabold border-[1.5px] border-[#E5B089]/50 cursor-not-allowed tracking-wide">
+            まだしおりがありません
+          </span>
+        <% end %>
       </section>
 
 <!-- お悩み解決セクション（付箋メモ＆マスキングテープ風） -->
@@ -132,7 +140,7 @@
   <!-- 解決メッセージ（破線ボックス） -->
   <div class="rounded-xl bg-[#FCEFE3] border-[1.5px] border-dashed border-[#E5B089] px-3.5 py-3 text-center">
     <p class="text-[13px] font-extrabold text-[#9F4813] leading-relaxed">
-      そんなお悩み、「未知しるべ」がまるっと解決！
+      そんなお悩み、「未知しるべ」がさくっと解決！
     </p>
   </div>
 </section>
