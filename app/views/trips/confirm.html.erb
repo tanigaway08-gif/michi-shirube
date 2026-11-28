@@ -39,7 +39,8 @@
 <div class="min-h-screen w-full flex flex-col items-center bg-[#FAF6F0]">
 
   <!-- スマホ幅コンテナ（旅の手帳風ドットパターン背景） -->
-  <div class="relative w-full max-w-[430px] min-h-screen mx-auto px-5 pb-8 flex flex-col bg-[#FAF6F0] [background-image:radial-gradient(#E5D3B8_1.2px,transparent_1.2px)] [background-size:18px_18px]">
+  <div data-controller="loading"
+       class="relative w-full max-w-[430px] min-h-screen mx-auto px-5 pb-8 flex flex-col bg-[#FAF6F0] [background-image:radial-gradient(#E5D3B8_1.2px,transparent_1.2px)] [background-size:18px_18px]">
 
     <!-- 上部の柔らかい光彩グラデーション -->
     <div class="pointer-events-none absolute inset-x-0 top-14 h-44 bg-gradient-to-b from-[#FCE6C9]/70 to-transparent z-0"></div>
@@ -77,7 +78,7 @@
             <span class="text-[16px] font-extrabold tracking-wide"><%= departure_info %></span>
           </div>
 
-<!-- 電車＆矢印アイコン -->
+          <!-- 電車＆矢印アイコン -->
           <div class="flex flex-col items-center px-2">
             <span class="text-[10px] font-bold text-[#FDEBD0] tracking-wider">AIルート検索</span>
             <div class="flex items-center gap-1.5 text-white mt-0.5">
@@ -110,7 +111,7 @@
       <!-- チケット本体：5つの選択内容リスト -->
       <div class="px-5 pt-1 pb-5 divide-y divide-[#F2E5D5]">
 
-<!-- ① 日程（旅行時間） -->
+        <!-- ① 日程（旅行時間） -->
         <div class="py-3 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="w-9 h-9 rounded-xl bg-[#FFF3E0] border border-[#F5D6B3] flex items-center justify-center p-0 shrink-0">
@@ -130,7 +131,7 @@
           <% end %>
         </div>
 
-<!-- ② 予算 -->
+        <!-- ② 予算 -->
         <div class="py-3 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="w-9 h-9 rounded-xl bg-[#FFF3E0] border border-[#F5D6B3] flex items-center justify-center p-0 shrink-0">
@@ -150,7 +151,7 @@
           <% end %>
         </div>
 
-<!-- ③ 出発地 -->
+        <!-- ③ 出発地 -->
         <div class="py-3 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="w-9 h-9 rounded-xl bg-[#FFF3E0] border border-[#F5D6B3] flex items-center justify-center p-0 shrink-0">
@@ -167,7 +168,7 @@
           <% end %>
         </div>
 
-<!-- ④ 交通手段 -->
+        <!-- ④ 交通手段 -->
         <div class="py-3 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="w-9 h-9 rounded-xl bg-[#FFF3E0] border border-[#F5D6B3] flex items-center justify-center p-0 shrink-0">
@@ -220,21 +221,82 @@
 
     <!-- 3. アクションボタン（AI提案を実行するメインCTA） -->
     <div class="relative z-10 mt-6 space-y-3">
-      <%= form_with url: proposals_path, method: :post do %>
+      <%= form_with url: proposals_path, method: :post, data: { action: "submit->loading#show" } do %>
         <button type="submit"
                 data-turbo-submits-with="しるべぇ駅長が探し中... 🐾"
-                class="relative w-full flex justify-center items-center h-[58px] rounded-full bg-gradient-to-b from-[#EEA065] to-[#DF7D3E] text-white text-[17px] font-extrabold shadow-[0_5px_14px_rgba(215,115,55,0.4)] hover:opacity-95 active:translate-y-0.5 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-wait">
+                class="relative w-full flex justify-center items-center h-[58px] rounded-full bg-gradient-to-b from-[#EEA065] to-[#DF7D3E] text-white text-[17px] font-extrabold shadow-[0_5px_14px_rgba(215,115,55,0.4)] hover:opacity-95 active:scale-95 active:translate-y-1 active:shadow-none active:brightness-95 select-none transition-all duration-100 cursor-pointer disabled:opacity-70 disabled:cursor-wait">
           <span class="tracking-wider">この条件で旅先を3つ探す！</span>
           <svg class="w-5 h-5 absolute right-6 text-white/95" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
           </svg>
         </button>
       <% end %>
-    </div>
 
       <div class="text-center pt-1">
         <%= link_to "最初からやり直す（トップ画面へ）", root_path,
               class: "text-[13px] font-bold text-[#7A5C43] underline underline-offset-4 decoration-[#7A5C43]/50 hover:opacity-75 transition-opacity" %>
+      </div>
+    </div>
+
+    <!-- 4. ローディング用ポップアップ -->
+    <style>
+      @keyframes runAcross {
+        0%   { transform: translateX(-120px); }
+        100% { transform: translateX(300px); }
+      }
+      @keyframes hopShirube {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50%      { transform: translateY(-7px) rotate(4deg); }
+      }
+      @keyframes hopHiyoko {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50%      { transform: translateY(-6px) rotate(-5deg); }
+      }
+      .animate-run-across {
+        animation: runAcross 3.2s linear infinite;
+      }
+      .animate-hop-shirube {
+        animation: hopShirube 0.35s ease-in-out infinite;
+      }
+      .animate-hop-hiyoko {
+        animation: hopHiyoko 0.28s ease-in-out infinite;
+      }
+    </style>
+
+    <div data-loading-target="modal"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center bg-[#3D2B1F]/50 backdrop-blur-[2px] px-6">
+      <div class="w-full max-w-[300px] rounded-[24px] border-2 border-[#F0D6C0] bg-[#FFFDFB] p-6 text-center shadow-xl space-y-4">
+
+        <!-- 追いかけっこアニメーションエリア -->
+        <div class="relative w-full h-24 overflow-hidden rounded-2xl bg-[#FFF7EC] border border-[#F0D6C0] flex items-end pb-2">
+          <!-- 走るコース（地面のライン） -->
+          <div class="absolute inset-x-3 bottom-2 border-b-2 border-dashed border-[#E5B089]/70"></div>
+
+          <!-- 左から右へ走るコンテナ（左：ひよこ / 右：しるべぇ駅長） -->
+          <div class="flex items-end gap-3 animate-run-across">
+            <%= image_tag "hiyoko_run.png",
+                  alt: "追いかけるひよこ",
+                  class: "w-9 h-9 object-contain animate-hop-hiyoko shrink-0" %>
+            <%= image_tag "shirube_run.png",
+                  alt: "走るしるべぇ駅長",
+                  class: "w-16 h-16 object-contain animate-hop-shirube shrink-0" %>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <p class="text-[15px] font-extrabold text-[#3D2B1F]">
+            ぴったりの旅先を探してるよ！🐾
+          </p>
+          <p class="text-xs font-bold text-[#7A5C43] leading-relaxed">
+            しるべぇ駅長がAIと相談中…<br>
+            10〜20秒ほどお待ちください
+          </p>
+        </div>
+
+        <!-- オレンジのスピナー -->
+        <div class="flex justify-center pt-1">
+          <div class="h-7 w-7 animate-spin rounded-full border-4 border-[#FDEBD0] border-t-[#E07A2E]"></div>
+        </div>
       </div>
     </div>
 
